@@ -10,7 +10,7 @@ class BranchMany extends AnyFlatSpec with ChiselScalatestTester {
     val BAUD = 9600
     val LED_CNT = 16
     val PROGRAM: Seq[Int] = ReadAssembly.readBin("tests/simple/branchmany.bin")
-    test(new TopSim(PROGRAM, MEM_SIZE, FREQ, BAUD, LED_CNT)).withAnnotations(Seq(WriteVcdAnnotation)) { dut =>
+    test(new TopSim(MEM_SIZE, FREQ, BAUD, LED_CNT)).withAnnotations(Seq(WriteVcdAnnotation)) { dut =>
       while(dut.io.regs(17).peekInt != 10) {
         dut.clock.step()
       }

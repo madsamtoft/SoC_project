@@ -1,0 +1,104 @@
+$date
+2025-02-12T12:57+0000
+$end
+$version
+0.2
+$end
+$comment
+
+$end
+$timescale 1ns  $end
+$scope module TopSim $end
+ $var wire 32 ! io_regs_11 $end
+ $var wire 32 " io_regs_6 $end
+ $var wire 8 # io_sevSeg_value $end
+ $var wire 4 $ io_sevSeg_anode $end
+ $var wire 32 % io_regs_19 $end
+ $var wire 32 & io_regs_31 $end
+ $var wire 1 ' io_uart_rx $end
+ $var wire 32 ( io_regs_25 $end
+ $var wire 32 ) io_regs_10 $end
+ $var wire 32 * io_regs_13 $end
+ $var wire 32 + io_regs_8 $end
+ $var wire 32 , io_regs_28 $end
+ $var wire 32 - io_regs_16 $end
+ $var wire 32 . io_regs_22 $end
+ $var wire 32 / io_regs_2 $end
+ $var wire 1 0 io_uart_tx $end
+ $var wire 32 1 io_regs_5 $end
+ $var wire 32 2 io_regs_21 $end
+ $var wire 32 3 io_regs_30 $end
+ $var wire 1 4 clock $end
+ $var wire 32 5 io_regs_18 $end
+ $var wire 32 6 io_regs_24 $end
+ $var wire 32 7 io_regs_4 $end
+ $var wire 16 8 io_switches $end
+ $var wire 32 9 io_regs_27 $end
+ $var wire 32 : io_regs_12 $end
+ $var wire 32 ; io_regs_7 $end
+ $var wire 32 < io_regs_15 $end
+ $var wire 32 = io_regs_1 $end
+ $var wire 4 > io_buttons $end
+ $var wire 32 ? io_regs_26 $end
+ $var wire 32 @ io_regs_0 $end
+ $var wire 32 A io_regs_29 $end
+ $var wire 1 B reset $end
+ $var wire 32 C io_regs_14 $end
+ $var wire 16 D io_leds $end
+ $var wire 32 E io_regs_20 $end
+ $var wire 32 F io_regs_9 $end
+ $var wire 32 G io_regs_17 $end
+ $var wire 32 H io_regs_3 $end
+ $var wire 32 I io_regs_23 $end
+$upscope $end
+$enddefinitions $end
+$dumpvars
+b00000000000000000000000000000000 &
+b00000000000000000000000000000000 <
+b00000000000000000000000000000000 =
+0'
+b00000000000000000000000000000000 (
+b0000 >
+b00000000000000000000000000000000 !
+b00000000000000000000000000000000 ?
+b00000000000000000000000000000000 7
+b00000000000000000000000000000000 "
+b0000000000000000 D
+b0000 $
+b00000000000000000000000000000000 9
+b00000000000000000000000000000000 :
+b00000000000000000000000000000000 2
+b00000000000000000000000000000000 3
+b00000000000000000000000000000000 I
+b0000000000000000 8
+04
+b00000000000000000000000000000000 5
+b00000000000000000000000000000000 6
+b00000000000000000000000000000000 .
+b00000000000000000000000000000000 /
+b00000000000000000000000000000000 E
+b00000000 #
+b00000000000000000000000000000000 F
+00
+b00000000000000000000000000000000 1
+b00000000000000000000000000000000 )
+b00000000000000000000000000000000 G
+b00000000000000000000000000000000 *
+b00000000000000000000000000000000 H
+b00000000000000000000000000000000 @
+b00000000000000000000000000000000 +
+b00000000000000000000000000000000 A
+b00000000000000000000000000000000 ,
+b00000000000000000000000000000000 -
+b00000000000000000000000000000000 %
+0B
+b00000000000000000000000000000000 C
+b00000000000000000000000000000000 ;
+$end
+#0
+1B
+#1
+14
+#6
+0B
+04
