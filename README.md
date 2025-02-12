@@ -1,7 +1,7 @@
 # SoC project
 Project work for B.Sc. in Computer Engineering creating a Custom Execution Platform in RISC-V with a Supporting Toolchain.
 
-## Implementations
+## Progress
 
 |                       | Idea | Plan | WIP | Done | Due Date |
 |-----------------------|------|------|-----|------|----------|
