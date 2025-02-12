@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <option name="separateProdTestSources" value="true" />
+    <profile name="sbt 1" modules="RISCV32,riscv32" />
+    <profile name="sbt 2" modules="RISCV32.main,RISCV32.test,riscv32.main,riscv32.test">
+      <option name="reflectiveCalls" value="true" />
+      <option name="featureWarnings" value="true" />
+      <plugins>
+        <plugin path="$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/edu/berkeley/cs/chisel3-plugin_2.12.13/3.5.6/chisel3-plugin_2.12.13-3.5.6.jar" />
+      </plugins>
+    </profile>
+  </component>
+</project>
