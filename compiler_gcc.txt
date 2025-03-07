@@ -1,0 +1,8 @@
+https://gcc.gnu.org/onlinedocs/gcc/OpenRISC-Options.html
+
+https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html#index-mfdiv
+Compile Options
+
+https://gcc.gnu.org/install/specific.html#riscv32-x-elf
+riscv32-*-elf
+The RISC-V RV32 instruction set. This configuration is intended for embedded systems. This (and all other RISC-V) targets require the binutils 2.30 release.

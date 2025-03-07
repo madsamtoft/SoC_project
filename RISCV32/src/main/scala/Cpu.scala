@@ -4,8 +4,19 @@ import chisel3.util._
 class Cpu extends Module{
   val io = IO(new Bundle{
     val instruction = Input(UInt(32.W))
+
+    //Outputs for testing
+    val pc = Output(UInt(32.W))
+    val regs = Vec(32, SInt(32.W))
   })
 
+  // IF
+  val pc_reg = RegInit(0.S(32.W))
+  val pc = WireDefault(0.U(32.W))
+  pc := (pc_reg + 4.S).asUInt
+  pc_reg := pc.asSInt
+
+  // ID
   val opcode = io.instruction(6, 0)
   val rd = WireDefault(0.U(5.W))
   val funct3 = WireDefault(0.U(3.W))
@@ -49,6 +60,7 @@ class Cpu extends Module{
       imm := io.instruction(31, 12)
     }
   }
+
 
 
 

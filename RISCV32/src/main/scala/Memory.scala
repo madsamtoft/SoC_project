@@ -1,8 +1,21 @@
 import chisel3._
+import chisel3.util._
 
-class Memory extends Module{
-  val io = IO(new Bundle{
-    val instruction = Output(UInt(32.W))
+class Memory(mem_size: Int) extends Module {
+  val io = IO(new Bundle {
+    val address = Input(UInt(32.W))
+    val data_in = Input(SInt(8.W))
+    val write_enable = Input(Bool())
+    val data_out = Output(SInt(8.W))
   })
-  io.instruction := 0.U
+
+  val memory = SyncReadMem(mem_size >> 2, SInt(8.W)) // Type: SyncReadMem
+
+  // Reading from memory
+  io.data_out := memory.read((io.address >> 2.U).asUInt)
+
+  // Writing to memory
+  when(io.write_enable) {
+    memory.write((io.address >> 2.U).asUInt, io.data_in)
+  }
 }
