@@ -1,3 +1,16 @@
+/* MMIO handler for MobyDeck implementation of Martin Schöeberls wildcat RV32I processor
+    Original code by Martin Schöeberl: https://github.com/schoeberl/wildcat
+    Modified by:
+    - Dejan Joel Künnemeyer
+    - Bertram Fink-Jacobsen
+    - Mads Amtoft Pedersen
+        Our repo: https://github.com/madsamtoft/wildcat_MobyDeck
+    
+    This file is part of the MobyDeck project.
+    This file is licensed under the MIT License.
+    See the LICENSE file for more information.
+*/
+
 #ifndef WILDIO_H
 #define WILDIO_H
 
