@@ -1,5 +1,3 @@
-
-
 #include "wildio.h"
 
 int volatile * const leds = (int *)LED_BASE_ADDR;
@@ -34,7 +32,7 @@ int setLed(int led, int value) {
     if (value == 1) {
         *leds |= 1 << led;
     } else {
-        *leds ^= 1 << led;
+        *leds &= ~(1 << led);
     }
     return *leds;
 }
