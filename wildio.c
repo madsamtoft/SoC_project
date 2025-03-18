@@ -4,6 +4,8 @@ int volatile * const leds = (int *)LED_BASE_ADDR;
 int volatile * const switches = (int *)SWITCH_BASE_ADDR;
 int volatile * const buttons = (int *)BUTTON_BASE_ADDR;
 
+static int led_state = 0;
+
 // Set/Read all values for LEDs, Switches and Buttons
 int setLeds(int value) {
     if (value > 0xffff) {
@@ -30,11 +32,12 @@ int setLed(int led, int value) {
         return 0;
     }
     if (value == 1) {
-        *leds |= 1 << led;
+        led_state |= 1 << led;
     } else {
-        *leds &= ~(1 << led);
+        led_state &= ~(1 << led);
     }
-    return *leds;
+    *leds = led_state;
+    return led_state;
 }
 
 int readButton(int button) {
