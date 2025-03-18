@@ -2,7 +2,7 @@
 
 int main(void) {
     while(1) {
-        for(int i = 0; i < 10000000; i++) {
+        for(int i = 0; i < 1000000; i++) {
             setLed(0, 1);
             setLed(1, 0);
             setLed(2, 1);
@@ -20,7 +20,7 @@ int main(void) {
             setLed(14, 1);
             setLed(15, 0);
         }
-        for(int i = 0; i < 10000000; i++) {
+        for(int i = 0; i < 1000000; i++) {
             setLed(0, 0);
             setLed(1, 1);
             setLed(2, 0);
