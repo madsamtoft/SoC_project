@@ -3,6 +3,10 @@
 int volatile * const leds = (int *)LED_BASE_ADDR;
 int volatile * const switches = (int *)SWITCH_BASE_ADDR;
 int volatile * const buttons = (int *)BUTTON_BASE_ADDR;
+int volatile * const ps2 = (int *)PS2_BASE_ADDR;
+
+int volatile * const uart = (int *)UART_BASE_ADDR;
+int volatile * const uart_send_recieve = (int *)UART_SEND_RECIEVE;
 
 static int led_state = 0;
 
@@ -21,6 +25,19 @@ int readSwitches(void) {
 
 int readButtons(void) {
     return *buttons;
+}
+
+int readPs2(void) {
+    return *ps2;
+}
+
+int setUart(int value) {
+    *uart_send_recieve = value;
+    return *uart_send_recieve;
+}
+
+int uartReady(void) {
+    return *uart;
 }
 
 // Set/Read individual values for LEDs, Switches and Buttons
