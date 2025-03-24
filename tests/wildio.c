@@ -5,18 +5,19 @@ int volatile * const switches = (int *)SWITCH_BASE_ADDR;
 int volatile * const buttons = (int *)BUTTON_BASE_ADDR;
 int volatile * const ps2 = (int *)PS2_BASE_ADDR;
 
-int volatile * const uart = (int *)UART_BASE_ADDR;
-int volatile * const uart_send_recieve = (int *)UART_SEND_RECIEVE;
+int volatile * const uart_status = (int *)UART_STATUS;
+int volatile * const uart_data = (int *)UART_DATA;
 
 static int led_state = 0;
 
 // Set/Read all values for LEDs, Switches and Buttons
-int setLeds(int value) {
+void setLeds(int value) {
     if (value > 0xffff) {
-        return 0;
+        led_state = 0b1010010000100101;
+    } else {
+        led_state = value;
     }
-    *leds = value;
-    return *leds;
+    *leds = led_state;
 }
 
 int readSwitches(void) {
@@ -31,30 +32,26 @@ int readPs2(void) {
     return *ps2;
 }
 
-int setUart(int value) {
-    *uart_send_recieve = value;
-    return *uart_send_recieve;
+void setUart(int value) {
+    *uart_data = value;
 }
 
 int uartReady(void) {
-    return *uart;
+    return *uart_status;
 }
 
 // Set/Read individual values for LEDs, Switches and Buttons
-int setLed(int led, int value) {
+void setLed(int led, int value) {
     if (led < 0 || led >= LED_COUNT) {
-        return 0;
-    }
-    if (value < 0 || value > 1) {
-        return 0;
-    }
-    if (value == 1) {
+        led_state = 0b0101101111011010;
+    } else if (value < 0 || value > 1) {
+        led_state = 0b1010010000100101;
+    } else if (value == 1) {
         led_state |= 1 << led;
     } else {
         led_state &= ~(1 << led);
     }
     *leds = led_state;
-    return led_state;
 }
 
 int readButton(int button) {

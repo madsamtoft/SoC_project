@@ -19,8 +19,8 @@
 #define BUTTON_BASE_ADDR 0xf0030000
 #define PS2_BASE_ADDR 0xf0040000
 
-#define UART_BASE_ADDR 0xf0000000
-#define UART_SEND_RECIEVE 0xf0000004
+#define UART_STATUS 0xf0000000
+#define UART_DATA 0xf0000004
 
 
 
@@ -33,6 +33,13 @@
 #define SWITCH_COUNT 16
 #define BUTTON_COUNT 4
 
+// Keyboard scancodes
+#define W 0x1D
+#define A 0x1C
+#define S 0x1B
+#define D 0x23
+
+// Include Functions
 #include "wildio.c"
 
 #endif
