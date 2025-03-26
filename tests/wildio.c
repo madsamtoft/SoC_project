@@ -32,8 +32,9 @@ int readPs2(void) {
     return *ps2;
 }
 
-void setUart(int value) {
+int setUart(int value) {
     *uart_data = value;
+    return *uart_data;
 }
 
 int uartReady(void) {

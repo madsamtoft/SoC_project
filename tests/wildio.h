@@ -26,7 +26,6 @@
 
 //Not yet implemented
 #define VGA_BASE_ADDR 0xf0000000
-#define USB_BASE_ADDR 0xf0000000
 //
 
 #define LED_COUNT 16

@@ -3,9 +3,11 @@
 int main(void) {
     int ps2_data = 0;
     int uart_data = 0;
+    int uart_ready = 0;
     while(1) {
         ps2_data = readPs2();
-        if (uartReady() & 1) {
+        uart_ready = uartReady();
+        if (uart_ready & 0b1) {
             setUart(ps2_data + '0');
         }
     }
