@@ -1,8 +1,9 @@
 sudo make clean
-make nostart file=tests/test_button out=out/test_button
-make nostart file=tests/test_switch out=out/test_switch
-make nostart file=tests/test_switches out=out/test_switches
-make nostart file=tests/test_blink out=out/test_blink
-make nostart file=tests/test_blink_single out=out/test_blink_single
-make nostart file=tests/test_usb_uart out=out/test_usb_uart
-make nostart file=tests/test_keyboard_uart out=out/test_keyboard_uart
+make nostart file=tests/button out=out/button
+make nostart file=tests/switch out=out/switch
+make nostart file=tests/switches out=out/switches
+make nostart file=tests/blink out=out/blink
+make nostart file=tests/blink_single out=out/blink_single
+make nostart file=tests/usb_uart_simple out=out/usb_uart_simple
+make nostart file=tests/usb_uart_parse out=out/usb_uart_parse
+make nostart file=tests/keyboard_uart out=out/keyboard_uart
