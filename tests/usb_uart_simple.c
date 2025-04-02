@@ -8,7 +8,10 @@ int main(void) {
         ps2_data = readPs2();
         uart_ready = uartReady();
         if (uart_ready & 0b1) {
-            setUart(ps2_data + '0');
+            if (ps2_data > 0) {
+                setUart('1');
+            }
+            
         }
     }
 }

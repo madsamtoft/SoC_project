@@ -7,3 +7,5 @@ make nostart file=tests/blink_single out=out/blink_single
 make nostart file=tests/usb_uart_simple out=out/usb_uart_simple
 make nostart file=tests/usb_uart_parse out=out/usb_uart_parse
 make nostart file=tests/keyboard_uart out=out/keyboard_uart
+make nostart file=tests/keyboard_uart out=out/keyboard_uart
+make nostart file=tests/ps2_led out=out/ps2_led

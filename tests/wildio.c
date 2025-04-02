@@ -9,6 +9,10 @@ int volatile * const uart_status = (int *)UART_STATUS;
 int volatile * const uart_data = (int *)UART_DATA;
 
 static int led_state = 0;
+static int switch_state = 0;
+static int button_state = 0;
+static int ps2_state = 0;
+static int uart_status_state = 0;
 
 // Set/Read all values for LEDs, Switches and Buttons
 void setLeds(int value) {
@@ -21,15 +25,18 @@ void setLeds(int value) {
 }
 
 int readSwitches(void) {
-    return *switches;
+    switch_state = *switches;
+    return switch_state;
 }
 
 int readButtons(void) {
-    return *buttons;
+    button_state = *buttons;
+    return button_state;
 }
 
 int readPs2(void) {
-    return *ps2;
+    ps2_state = *ps2;
+    return ps2_state;
 }
 
 int setUart(int value) {
@@ -38,7 +45,8 @@ int setUart(int value) {
 }
 
 int uartReady(void) {
-    return *uart_status;
+    uart_status_state = *uart_status;
+    return uart_status_state;
 }
 
 // Set/Read individual values for LEDs, Switches and Buttons

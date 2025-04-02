@@ -10,4 +10,4 @@ nostart:
 small:
 	riscv32-unknown-elf-gcc $(file).c -o $(out).out -Os -nostartfiles -nodefaultlibs -nostdlib
 clean:
-	rm *.out
+	rm out/*.out
