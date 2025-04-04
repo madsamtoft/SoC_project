@@ -27,13 +27,8 @@
 #define SWITCH_COUNT 16
 #define BUTTON_COUNT 4
 
-// Keyboard scancodes
-#define W 0x1D
-#define A 0x1C
-#define S 0x1B
-#define D 0x23
-
 // Include Functions
 #include "wildio.c"
+#include "keyboard_scancodes.h"
 
 #endif
