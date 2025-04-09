@@ -16,7 +16,7 @@ static int switch_state;
 static int button_state;
 static int ps2_state;
 static int uart_status_state;
-static int * vga_state;
+static int vga_state[X_MAX * Y_MAX];
 
 // Set/Read all values for LEDs, Switches and Buttons
 void setLeds(int value) {
