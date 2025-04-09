@@ -96,6 +96,10 @@ void clearLeds(void) {
     *leds = led_state;
 }
 
+int getLeds(void) {
+    return led_state;
+}
+
 // Switch Functions
 int readSwitches(void) {
     switch_state = *switches;
