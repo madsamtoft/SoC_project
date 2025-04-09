@@ -11,11 +11,11 @@ int main(void) {
             setLed(i, switch_state);
         }
         //delay(100000);
-        //uart_ready = uartReady();
-        //led_state = switch_state;
-        //if (uart_ready & 0b1) {
-        //    setUart((led_state & 0xF) + '0');
-        //}
+        uart_ready = uartReady();
+        led_state = switch_state;
+        if (uart_ready & 0b1) {
+            setUart((led_state & 0xF) + '0');
+        }
     }
     return 0;
 }
