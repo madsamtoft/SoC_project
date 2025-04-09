@@ -14,7 +14,7 @@ int main(void) {
         uart_ready = uartReady();
         led_state = getLeds();
         if (uart_ready & 0b1) {
-            setUart(led_state & 0xF);
+            setUart((led_state & 0xF) + '0');
         }
     }
     return 0;
