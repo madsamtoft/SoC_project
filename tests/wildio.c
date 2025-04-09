@@ -18,6 +18,11 @@ static int ps2_state;
 static int uart_status_state;
 static int vga_state[X_MAX * Y_MAX];
 
+// Delay function
+void delay(int cycles) {
+    for (volatile int i = 0; i < cycles; i++);
+}
+
 // Set/Read all values for LEDs, Switches and Buttons
 void setLeds(int value) {
     if (value > 0xffff) {

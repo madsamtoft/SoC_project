@@ -1,12 +1,11 @@
 #include "wildio.h"
 
 int main(void) {
-    int switch_index = 0;
-    int switch_value = 0;
-    while(1) {
-        switch_value = readSwitch(switch_index);
-        setLed(switch_index, switch_value);
-        switch_index = (switch_index + 1) % SWITCH_COUNT;
+    while (1) {
+        for (int i = 0; i < SWITCH_COUNT; i++) {
+            setLed(i, readSwitch(i));
+        }
+        delay(100000);
     }
     return 0;
 }
