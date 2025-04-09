@@ -27,6 +27,10 @@
 #define SWITCH_COUNT 16
 #define BUTTON_COUNT 4
 
+#define VIDEO_WIDTH 160
+#define VIDEO_HEIGHT 120
+
+
 // Include Functions
 #include "wildio.c"
 #include "keyboard_scancodes.h"

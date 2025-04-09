@@ -1,13 +1,12 @@
 in = main
-out = main
 
 make:
-	riscv32-unknown-elf-gcc $(file).c -o $(out).out
+	riscv32-unknown-elf-gcc tests/$(file).c -o out/$(file).out
 nolib:
-	riscv32-unknown-elf-gcc $(file).c -o $(out).out -Os -nodefaultlibs -nostdlib
+	riscv32-unknown-elf-gcc tests/$(file).c -o out/$(file).out -Os -nodefaultlibs -nostdlib
 nostart:
-	riscv32-unknown-elf-gcc $(file).c -o $(out).out -Os -nostartfiles
+	riscv32-unknown-elf-gcc tests/$(file).c -o out/$(file).out -Os -nostartfiles
 small:
-	riscv32-unknown-elf-gcc $(file).c -o $(out).out -Os -nostartfiles -nodefaultlibs -nostdlib
+	riscv32-unknown-elf-gcc tests/$(file).c -o out/$(file).out -Os -nostartfiles -nodefaultlibs -nostdlib
 clean:
 	rm out/*.out

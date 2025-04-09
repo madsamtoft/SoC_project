@@ -9,11 +9,14 @@ int volatile * const ps2 = (int *)PS2_BASE_ADDR;
 int volatile * const uart_status = (int *)UART_STATUS;
 int volatile * const uart_data = (int *)UART_DATA;
 
+int volatile * const pixels = (int *)VGA_BASE_ADDR;
+
 static int led_state = 0;
 static int switch_state = 0;
 static int button_state = 0;
 static int ps2_state = 0;
 static int uart_status_state = 0;
+static int pixel_state[] = {};
 
 // Set/Read all values for LEDs, Switches and Buttons
 void setLeds(int value) {
@@ -77,6 +80,14 @@ int readSwitch(int sw) {
         return 0;
     }
     return (readSwitches() >> sw) & 1;
+}
+
+void setPixel(int x, int y, int color) {
+    if ((x < 0 || x >= VIDEO_WIDTH) || (y < 0 || y >= VIDEO_HEIGHT) || (color < 0 || color > 0b111111)) {
+        return;
+    }
+    pixel_state[y * VIDEO_WIDTH + x] = color;
+    *pixels = *pixel_state;
 }
 
 //// READ KEYBOARD SCANCODES
