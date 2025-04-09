@@ -12,7 +12,7 @@ int main(void) {
         }
         delay(100000);
         uart_ready = uartReady();
-        led_state = getLeds();
+        led_state = switch_state;
         if (uart_ready & 0b1) {
             setUart((led_state & 0xF) + '0');
         }
