@@ -88,7 +88,7 @@ void setPixel(int x, int y, int color) {
     }
     int addr = (y << X_BIT_WIDTH) | x;
     vga_state[addr] = color;
-    vga = vga_state;
+    vga[addr] = vga_state[addr];
 }
 
 //// READ KEYBOARD SCANCODES
