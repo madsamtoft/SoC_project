@@ -5,7 +5,7 @@ int main(void) {
     int switch_value = 0;
     while(1) {
         switch_value = readSwitch(switch_index);
-        setLeds(switch_value);
+        setLed(switch_index, switch_value);
         switch_index = (switch_index + 1) % SWITCH_COUNT;
     }
     return 0;
