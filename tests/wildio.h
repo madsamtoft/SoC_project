@@ -27,8 +27,11 @@
 #define SWITCH_COUNT 16
 #define BUTTON_COUNT 4
 
-#define VIDEO_WIDTH 160
-#define VIDEO_HEIGHT 120
+#define X_BIT_WIDTH 8
+#define Y_BIT_WIDTH 7
+#define X_MAX 256
+#define Y_MAX 128
+#define C_MAX 64
 
 
 // Include Functions
