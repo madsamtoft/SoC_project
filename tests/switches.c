@@ -12,9 +12,9 @@ int main(void) {
         }
         //delay(100000);
         uart_ready = uartReady();
-        led_state = switch_state;
+        led_state = getLeds();
         if (uart_ready & 0b1) {
-            setUart((led_state & 0xF) + '0');
+            setUart(led_state + '0');
         }
     }
     return 0;
