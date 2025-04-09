@@ -55,8 +55,9 @@ static int vga_state[X_MAX * Y_MAX];
 
 // Functions
 // Delay function
-void delay(int cycles) {
+int delay(int cycles) {
     for (volatile int i = 0; i < cycles; i++);
+    return 0;
 }
 
 // Led Functions
@@ -105,7 +106,6 @@ int returnLeds(void) {
             count++;
         }
     }
-
     return count;
 }
 

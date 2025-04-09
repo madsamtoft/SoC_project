@@ -10,7 +10,7 @@ int main(void) {
             switch_state = readSwitch(i);
             setLed(i, switch_state);
         }
-        //delay(100000);
+        delay(10);
         uart_ready = uartReady();
         leds_state = returnLeds();
         if (uart_ready & 0b1) {
