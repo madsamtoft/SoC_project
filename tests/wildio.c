@@ -23,7 +23,7 @@ void delay(int cycles) {
     for (volatile int i = 0; i < cycles; i++);
 }
 
-// Set/Read all values for LEDs, Switches and Buttons
+// Led Functions
 void setLeds(int value) {
     if (value > 0xffff) {
         led_state = 0b1010010000100101;
@@ -33,16 +33,60 @@ void setLeds(int value) {
     *leds = led_state;
 }
 
+int setLed(int led, int value) {
+    if (led < 0 || led >= LED_COUNT) {
+        led_state = 0b0101101111011010;
+    } else if (value < 0 || value > 1) {
+        led_state = 0b1010010000100101;
+    } else if (value == 1) {
+        led_state |= 1 << led;
+    } else {
+        led_state &= ~(1 << led);
+    }
+    *leds = led_state;
+    return led_state;
+}
+
+void toggleLed(int led) {
+    if (led < 0 || led >= LED_COUNT) {
+        return;
+    }
+    led_state ^= (1 << led);
+    *leds = led_state;
+}
+
+void clearLeds(void) {
+    led_state = 0;
+    *leds = led_state;
+}
+
+// Switch Functions
 int readSwitches(void) {
     switch_state = *switches;
     return switch_state;
 }
 
+int readSwitch(int sw) {
+    if (sw < 0 || sw >= SWITCH_COUNT) {
+        return 0;
+    }
+    return (readSwitches() >> sw) & 1;
+}
+
+// Button Functions
 int readButtons(void) {
     button_state = *buttons;
     return button_state;
 }
 
+int readButton(int button) {
+    if (button < 0 || button >= BUTTON_COUNT) {
+        return 0;
+    }
+    return (readButtons() >> button) & 1;
+}
+
+// PS2/UART Functions
 int readPs2(void) {
     ps2_state = *ps2;
     return ps2_state;
@@ -58,35 +102,7 @@ int uartReady(void) {
     return uart_status_state;
 }
 
-// Set/Read individual values for LEDs, Switches and Buttons
-int setLed(int led, int value) {
-    if (led < 0 || led >= LED_COUNT) {
-        led_state = 0b0101101111011010;
-    } else if (value < 0 || value > 1) {
-        led_state = 0b1010010000100101;
-    } else if (value == 1) {
-        led_state |= 1 << led;
-    } else {
-        led_state &= ~(1 << led);
-    }
-    *leds = led_state;
-    return led_state;
-}
-
-int readButton(int button) {
-    if (button < 0 || button >= BUTTON_COUNT) {
-        return 0;
-    }
-    return (readButtons() >> button) & 1;
-}
-
-int readSwitch(int sw) {
-    if (sw < 0 || sw >= SWITCH_COUNT) {
-        return 0;
-    }
-    return (readSwitches() >> sw) & 1;
-}
-
+// VGA Functions
 void setPixel(int x, int y, int color) {
     if ((x < 0 || x >= X_MAX) || (y < 0 || y >= Y_MAX) || (color < 0 || color >= C_MAX)) {
         return;
@@ -95,7 +111,7 @@ void setPixel(int x, int y, int color) {
     vga[addr] = color;
 }
 
-//// READ KEYBOARD SCANCODES
+//// KEYBOARD SCANCODES (WIP)
 char readKey(int val) {
     if(val == ESC) {
         return 'x';
