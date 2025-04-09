@@ -96,8 +96,17 @@ void clearLeds(void) {
     *leds = led_state;
 }
 
-int getLeds(void) {
-    return led_state;
+int returnLeds(void) {
+    int count = 0;
+    int value = led_state;
+
+    for (int i = 0; i < LED_COUNT; i++) {
+        if (value & (1 << i)) {
+            count++;
+        }
+    }
+
+    return count;
 }
 
 // Switch Functions

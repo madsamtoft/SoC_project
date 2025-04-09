@@ -3,7 +3,7 @@
 
 int main(void) {
     int uart_ready = 0;
-    int led_state = 0;
+    int leds_state = 0;
     int switch_state = 0;
     while (1) {
         for (int i = 0; i < SWITCH_COUNT; i++) {
@@ -12,7 +12,7 @@ int main(void) {
         }
         //delay(100000);
         uart_ready = uartReady();
-        led_state = getLeds();
+        leds_state = returnLeds();
         if (uart_ready & 0b1) {
             setUart(led_state + '0');
         }
