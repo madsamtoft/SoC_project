@@ -29,8 +29,8 @@
 
 #define X_BIT_WIDTH 8
 #define Y_BIT_WIDTH 7
-#define X_MAX 256
-#define Y_MAX 128
+#define X_MAX 160
+#define Y_MAX 120
 #define C_MAX 64
 
 
