@@ -54,16 +54,6 @@ static int uart_status_state;
 static int vga_state[X_MAX * Y_MAX];
 
 // Functions
-// Delay function
-int delay(int cycles) {
-    volatile int i;
-    for (i = 0; i < cycles; i++) {
-        if (i == cycles-1) {
-            return i;
-        }
-    }
-}
-
 // Led Functions
 void setLeds(int value) {
     if (value > 0xffff) {
