@@ -19,7 +19,7 @@
 #define SWITCH_BASE_ADDR 0xf0020000
 #define BUTTON_BASE_ADDR 0xf0030000
 #define PS2_BASE_ADDR    0xf0040000
-#define VGA_BASE_ADDR    0xf0050000
+#define VGA_BASE_ADDR    0xf0100000
 
 #define UART_STATUS      0xf0000000
 #define UART_DATA        0xf0000004
@@ -44,7 +44,7 @@ int volatile * const ps2 = (int *)PS2_BASE_ADDR;
 int volatile * const uart_status = (int *)UART_STATUS;
 int volatile * const uart_data = (int *)UART_DATA;
 
-int volatile * const vga = (volatile int *) VGA_BASE_ADDR;
+volatile char * const vga = (volatile char *) VGA_BASE_ADDR;
 
 static int led_state;
 static int switch_state;
@@ -146,13 +146,13 @@ int uartReady(void) {
 }
 
 // VGA Functions
-void setPixel(int x, int y, int color) {
-    if ((x < 0 || x >= X_MAX) || (y < 0 || y >= Y_MAX) || (color < 0 || color >= C_MAX)) {
-        return;
-    }
-    int addr = (y << X_BIT_WIDTH) | x;
-    vga[addr] = color;
-}
+// void setPixel(int x, int y, int color) {
+//     if ((x < 0 || x >= X_MAX) || (y < 0 || y >= Y_MAX) || (color < 0 || color >= C_MAX)) {
+//         return;
+//     }
+//     int addr = (y << X_BIT_WIDTH) | x;
+//     vga[addr] = color;
+// }
 
 //// KEYBOARD SCANCODES (WIP)
 char readKey(int val) {
