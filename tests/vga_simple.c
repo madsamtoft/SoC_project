@@ -4,44 +4,33 @@
 // #define VGA_BASE_ADDR 0xf0100000
 // volatile char * const vga = (volatile char *) VGA_BASE_ADDR;
 
+// const int XLIM = 320;
+// const int YLIM = 240;
 
+void refreshScreen(char color);
 void setPixel(int x, int y, char c);
-// void wait(int cc);
 
 int main(void) {
-    int xlim = 320;
-    int ylim = 240;
-    char clim = 0b111111;
-
-    int x = 0;
-    int y = 0;
-    char c = 0;
-
     while(1) {
-        int sw = readSwitches() & 0b111111;
-        setPixel(x, y, sw);
-        x = x+1;
-        if (x >= xlim) {
-            x = 0;
-            y = y+1;
-            if (y >= ylim) {
-                y = 0;
-                c = c+1;
-                if (c >= clim) {
-                    c = 0;
-                }
-            }
-        }
+        char sw = readSwitches() & 0b111111;
+        refreshScreen(sw);
     }
     return 0;
 }
 
-// void wait(int cc) {
-//     volatile int i = 0;
-//     while(i < cc) {
-//         i += 1;
-//     }
-// }
+void refreshScreen(char color) {
+    int x = 0;
+    int y = 0;
+
+    while(y < VGA_Y_MAX) {
+        while(x < VGA_X_MAX) {
+            setPixel(x, y, color);
+            x = x+1;
+        }
+        x = 0;
+        y = y+1;
+    }
+}
 
 void setPixel(int x, int y, char c) {
     int xOffset = x & 0x1ff;

@@ -30,9 +30,9 @@
 
 #define X_BIT_WIDTH 8
 #define Y_BIT_WIDTH 7
-#define X_MAX 160
-#define Y_MAX 120
-#define C_MAX 64
+#define VGA_X_MAX 320
+#define VGA_Y_MAX 240
+#define VGA_C_MAX 64
 
 
 // Variables
@@ -51,7 +51,7 @@ static int switch_state;
 static int button_state;
 static int ps2_state;
 static int uart_status_state;
-static int vga_state[X_MAX * Y_MAX];
+static int vga_state[VGA_X_MAX * VGA_Y_MAX];
 
 // Functions
 // Led Functions
@@ -358,4 +358,5 @@ char readKey(int val) {
     }
 }
 */
+
 #endif
