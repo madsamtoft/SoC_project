@@ -2,6 +2,7 @@ sudo make clean
 make nostart file=button
 make nostart file=switch
 make nostart file=switches 
+make nostart file=switches_simple
 make nostart file=blink
 make nostart file=blink_single
 make nostart file=usb_uart_simple 
