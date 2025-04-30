@@ -156,6 +156,65 @@ void setPixel(int x, int y, int color) {
 
 //// KEYBOARD SCANCODES (WIP)
 char readKey(int val) {
+    if(val == 0x00) {
+        return '0';
+    }
+    else if (val == 0x01) {
+        return '0';
+    }
+    else if (val == 0x02) {
+        return '0';
+    }
+    else if (val == 0x03) {
+        return '0';
+    }
+    else if (val == 0x04) {
+        return '0';
+    }
+    else if (val == 0x05) {
+        return '0';
+    }
+    else if (val == 0x06) {
+        return '0';
+    }
+    else if (val == 0x07) {
+        return '0';
+    }
+    else if (val == 0x08) {
+        return '0';
+    }
+    else if (val == 0x09) {
+        return '0';
+    }
+    else if (val == 0x0A) {
+        return '0';
+    }
+    else if (val == 0x0B) {
+        return '0';
+    }
+    else if (val == 0x0C) {
+        return '0';
+    }
+    else if (val == 0x0D) {
+        return '0';
+    }
+    else if (val == 0x0E) {
+        return '0';
+    }
+    else if (val == 0x0F) {
+        return '0';
+    }
+    else if (val == 0x10) {
+        return '1';
+    }
+    else {
+        return '?';
+    }
+
+}
+
+/*
+char readKey(int val) {
     if(val == ESC) {
         return 'x';
     } else if(val == F1) {
@@ -302,5 +361,5 @@ char readKey(int val) {
         return '?';
     }
 }
-
+*/
 #endif
