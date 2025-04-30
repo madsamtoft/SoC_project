@@ -1,9 +1,9 @@
 #include "wildio.h"
 
 int main(void) {
-    int ps2_data = 0;
-    int uart_ready = 0;
-    char key = ' ';
+    volatile int ps2_data;
+    volatile int uart_ready;
+    volatile char key;
     while(1) {
         ps2_data = readPs2();
         uart_ready = uartReady();
