@@ -2,30 +2,6 @@
 #define KEYBOARD_SCANCODES_H
 
 // Keyboard scancodes
-# define AEGIS 0x00
-# define FIRST 0x01
-# define SECOND 0x02
-# define THIRD 0x03
-# define FOURTH 0x04
-# define FIFTH 0x05
-# define SIXTH 0x06
-# define SEVENTH 0x07
-# define EIGHTH 0x08
-# define NINTH 0x09
-# define TENTH 0x0A
-# define ELEVENTH 0x0B
-# define TWELFTH 0x0C
-# define THIRTEENTH 0x0D
-# define FOURTEENTH 0x0E
-# define FIFTEENTH 0x0F
-# define SIXTEENTH 0x10
-# define SEVENTEENTH 0x11
-# define EIGHTEENTH 0x12
-
-
-
-
-
 #define ESC 0x76
 #define F1 0x05
 #define F2 0x06

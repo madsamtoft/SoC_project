@@ -6,6 +6,6 @@ make nostart file=switches_simple
 make nostart file=blink
 make nostart file=blink_single
 make nostart file=usb_uart_simple 
-make nostart file=keyboard_uart
+make nostart file=print_uart
 make nostart file=ps2_led
 make nostart file=vga_simple

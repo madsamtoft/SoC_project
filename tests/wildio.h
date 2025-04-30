@@ -156,61 +156,57 @@ void setPixel(int x, int y, int color) {
 
 //// KEYBOARD SCANCODES (WIP)
 char readKey(int val) {
-    if(val == 0x00) {
+    if (val <= 0x0F) {
         return '0';
-    }
-    else if (val == 0x01) {
-        return '0';
-    }
-    else if (val == 0x02) {
-        return '0';
-    }
-    else if (val == 0x03) {
-        return '0';
-    }
-    else if (val == 0x04) {
-        return '0';
-    }
-    else if (val == 0x05) {
-        return '0';
-    }
-    else if (val == 0x06) {
-        return '0';
-    }
-    else if (val == 0x07) {
-        return '0';
-    }
-    else if (val == 0x08) {
-        return '0';
-    }
-    else if (val == 0x09) {
-        return '0';
-    }
-    else if (val == 0x0A) {
-        return '0';
-    }
-    else if (val == 0x0B) {
-        return '0';
-    }
-    else if (val == 0x0C) {
-        return '0';
-    }
-    else if (val == 0x0D) {
-        return '0';
-    }
-    else if (val == 0x0E) {
-        return '0';
-    }
-    else if (val == 0x0F) {
-        return '0';
-    }
-    else if (val == 0x10) {
+
+    } else if (val <= 0x1F) {
         return '1';
+
+    } else if (val <= 0x2F) {
+        return '2';
+
+    } else if (val <= 0x3F) {
+        return '3';
+
+    } else if (val <= 0x4F) {
+        return '4';
+
+    } else if (val <= 0x5F) {
+        return '5';
+
+    } else if (val <= 0x6F) {
+        return '6';
+
+    } else if (val <= 0x7F) {
+        return '7';
+
+    } else if (val <= 0x8F) {
+        return '8';
+
+    } else if (val <= 0x9F) {
+        return '9';
+    }
+    else if (val <= 0xAF) {
+        return 'A';
+
+    } else if (val <= 0xBF) {
+        return 'B';
+
+    } else if (val <= 0xCF) {
+        return 'C';
+
+    } else if (val <= 0xDF) {
+        return 'D';
+
+    } else if (val <= 0xEF) {
+        return 'E';
+
+    } else if (val <= 0xFF) {
+        return 'F';
     }
     else {
         return '?';
     }
-
 }
 
 /*
