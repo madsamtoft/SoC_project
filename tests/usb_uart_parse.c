@@ -18,7 +18,7 @@ int main(void) {
                 wait = 0;
                 value += ps2_data << i;
             }
-            setUart(value + '0');
+            setUart(value);
         }
     }
 }
