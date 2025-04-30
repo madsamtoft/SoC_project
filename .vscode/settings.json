@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        ".fantomasignore": "ignore",
-        "stdio.h": "c",
-        "wildio.h": "c"
-    }
-}
