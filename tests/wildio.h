@@ -50,7 +50,7 @@ static int switch_state;
 static int button_state;
 static int ps2_state;
 static int uart_status_state;
-static int vga_state[VGA_X_MAX * VGA_Y_MAX];
+// static int vga_state[VGA_X_MAX * VGA_Y_MAX];
 
 // Functions
 // Led Functions
@@ -157,6 +157,13 @@ void setPixel(int x, int y, int color) {
     vga[addr] = color;
 }
 */
+// VGA Functions
+// void setPixel(int x, int y, char c) {
+//     int xOffset = x & 0x1ff; 
+//     int yOffset = (y & 0xff) << 9;
+//     volatile char * addrPtr = vga + xOffset + yOffset;
+//     *addrPtr = c;
+// }
 
 //// KEYBOARD SCANCODES (WIP)
 char readKey(int val) {
