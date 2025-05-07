@@ -1,0 +1,205 @@
+main:
+    addi x2 x2 -32
+    sw x8 24 x2
+    sw x9 20 x2
+    sw x18 16 x2
+    sw x19 12 x2
+    sw x20 8 x2
+    sw x21 4 x2
+    sw x22 0 x2
+    sw x1 28 x2
+    addi x18 x0 0
+    addi x9 x0 0
+    addi x8 x0 0
+    lui x19 0xf0020
+    addi x20 x0 320
+    addi x21 x0 238
+    addi x22 x0 62
+    lw x12 0 x19
+    addi x10 x8 0
+    addi x11 x9 0
+    andi x12 x12 63
+    addi x8 x8 1
+    jal x1 608
+    bne x8 x20 -24
+    blt x21 x9 12
+    addi x9 x9 1
+    jal x0 24
+    addi x18 x18 1
+    andi x18 x18 255
+    bgeu x22 x18 8
+    addi x18 x0 0
+    addi x9 x0 0
+    addi x8 x0 0
+    jal x0 -64
+
+setLeds:
+    lui x15 0x10
+    blt x10 x15 12
+    lui x10 0xa
+    addi x10 x10 1061
+    sw x10 -2020 x3
+    lui x15 0xf0010
+    sw x10 0 x15
+    jalr x0 x1 0
+
+setLed:
+    addi x15 x0 15
+    addi x14 x10 0
+    bltu x15 x10 64
+    lui x15 0xa
+    addi x13 x0 1
+    addi x10 x15 1061
+    bltu x13 x11 20
+    lw x10 -2020 x3
+    sll x14 x13 x14
+    bne x11 x13 24
+    or x10 x14 x10
+    sw x10 -2020 x3
+    lui x15 0xf0010
+    sw x10 0 x15
+    jalr x0 x1 0
+    xori x14 x14 -1
+    and x10 x14 x10
+    jal x0 -24
+    lui x10 0x6
+    addi x10 x10 -1062
+    jal x0 -36
+
+toggleLed:
+    addi x15 x0 15
+    bltu x15 x10 32
+    addi x15 x0 1
+    sll x10 x15 x10
+    lw x14 -2020 x3
+    xor x10 x10 x14
+    sw x10 -2020 x3
+    lui x15 0xf0010
+    sw x10 0 x15
+    jalr x0 x1 0
+
+clearLeds:
+    sw x0 -2020 x3
+    lui x15 0xf0010
+    sw x0 0 x15
+    jalr x0 x1 0
+
+returnLeds:
+    lw x12 -2020 x3
+    addi x10 x0 0
+    addi x15 x0 0
+    addi x13 x0 16
+    sra x14 x12 x15
+    andi x14 x14 1
+    addi x15 x15 1
+    add x10 x10 x14
+    bne x15 x13 -16
+    jalr x0 x1 0
+
+readSwitches:
+    lui x15 0xf0020
+    lw x10 0 x15
+    jalr x0 x1 0
+
+readSwitch:
+    addi x15 x0 15
+    bltu x15 x10 24
+    lui x15 0xf0020
+    lw x15 0 x15
+    sra x10 x15 x10
+    andi x10 x10 1
+    jalr x0 x1 0
+    addi x10 x0 0
+    jalr x0 x1 0
+
+readButtons:
+    lui x15 0xf0030
+    lw x10 0 x15
+    jalr x0 x1 0
+
+readButton:
+    addi x15 x0 3
+    bltu x15 x10 24
+    lui x15 0xf0030
+    lw x15 0 x15
+    sra x10 x15 x10
+    andi x10 x10 1
+    jalr x0 x1 0
+    addi x10 x0 0
+    jalr x0 x1 0
+
+readPs2:
+    lui x15 0xf0040
+    lw x10 0 x15
+    jalr x0 x1 0
+
+setUart:
+    lui x15 0xf0000
+    sw x10 4 x15
+    lw x10 4 x15
+    jalr x0 x1 0
+
+uartReady:
+    lui x15 0xf0000
+    lw x10 0 x15
+    jalr x0 x1 0
+
+readKey:
+    addi x14 x0 15
+    addi x15 x10 0
+    bge x14 x10 196
+    addi x14 x0 31
+    addi x10 x0 49
+    bge x14 x15 188
+    addi x14 x0 47
+    addi x10 x0 50
+    bge x14 x15 176
+    addi x14 x0 63
+    addi x10 x0 51
+    bge x14 x15 164
+    addi x14 x0 79
+    addi x10 x0 52
+    bge x14 x15 152
+    addi x14 x0 95
+    addi x10 x0 53
+    bge x14 x15 140
+    addi x14 x0 111
+    addi x10 x0 54
+    bge x14 x15 128
+    addi x14 x0 127
+    addi x10 x0 55
+    bge x14 x15 116
+    addi x14 x0 143
+    addi x10 x0 56
+    bge x14 x15 104
+    addi x14 x0 159
+    addi x10 x0 57
+    bge x14 x15 92
+    addi x14 x0 175
+    addi x10 x0 65
+    bge x14 x15 80
+    addi x14 x0 191
+    addi x10 x0 66
+    bge x14 x15 68
+    addi x14 x0 207
+    addi x10 x0 67
+    bge x14 x15 56
+    addi x14 x0 223
+    addi x10 x0 68
+    bge x14 x15 44
+    addi x14 x0 239
+    addi x10 x0 69
+    bge x14 x15 32
+    addi x14 x0 255
+    slt x15 x14 x15
+    sub x15 x0 x15
+    andi x10 x15 -7
+    addi x10 x10 70
+    jalr x0 x1 0
+    addi x10 x0 48
+    jalr x0 x1 0
+
+setPixel:
+    lui x15 0x20
+    addi x15 x15 -512
+    slli
