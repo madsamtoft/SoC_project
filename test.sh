@@ -1,11 +1,16 @@
 sudo make clean
-make nostart file=button
-make nostart file=switch
-make nostart file=switches 
-make nostart file=switches_simple
-make nostart file=blink
-make nostart file=blink_single
-make nostart file=usb_uart_simple 
-make nostart file=print_uart
-make nostart file=ps2_led
-make nostart file=vga_simple
+
+make $1 file=blink_single
+make $1 file=blink
+
+make $1 file=button
+
+make $1 file=switch_simple
+make $1 file=switch
+make $1 file=switches_simple
+make $1 file=switches 
+
+make $1 file=uart_print
+make $1 file=uart_usb_simple 
+
+make $1 file=vga_simple

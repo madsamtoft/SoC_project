@@ -28,23 +28,22 @@
 #define SWITCH_COUNT 16
 #define BUTTON_COUNT 4
 
-#define X_BIT_WIDTH 8
-#define Y_BIT_WIDTH 7
 #define VGA_X_MAX 320
 #define VGA_Y_MAX 240
 #define VGA_C_MAX 64
 
 
 // Variables
-int volatile * const leds = (int *)LED_BASE_ADDR;
-int volatile * const switches = (int *)SWITCH_BASE_ADDR;
-int volatile * const buttons = (int *)BUTTON_BASE_ADDR;
-int volatile * const ps2 = (int *)PS2_BASE_ADDR;
+volatile int * const leds = (int *)LED_BASE_ADDR;
+volatile int * const switches = (int *)SWITCH_BASE_ADDR;
+volatile int * const buttons = (int *)BUTTON_BASE_ADDR;
+volatile int * const ps2 = (int *)PS2_BASE_ADDR;
 
-int volatile * const uart_status = (int *)UART_STATUS;
-int volatile * const uart_data = (int *)UART_DATA;
+volatile int * const uart_status = (int *)UART_STATUS;
+volatile int * const uart_data = (int *)UART_DATA;
 
 volatile char * const vga = (volatile char *) VGA_BASE_ADDR;
+volatile int * const vga_int = (int *) VGA_BASE_ADDR;
 
 static int led_state;
 static int switch_state;
@@ -78,6 +77,7 @@ int setLed(int led, int value) {
     return led_state;
 }
 
+/*
 void toggleLed(int led) {
     if (led < 0 || led >= LED_COUNT) {
         return;
@@ -102,6 +102,7 @@ int returnLeds(void) {
     }
     return count;
 }
+*/
 
 // Switch Functions
 int readSwitches(void) {
@@ -110,10 +111,11 @@ int readSwitches(void) {
 }
 
 int readSwitch(int sw) {
-    if (sw < 0 || sw >= SWITCH_COUNT) {
-        return 0;
+    if (sw >= 0 && sw < SWITCH_COUNT) {
+        switch_state = *switches;
+        return (switch_state >> sw) & 0b1;
     }
-    return (readSwitches() >> sw) & 1;
+    return 0;
 }
 
 // Button Functions
@@ -123,10 +125,11 @@ int readButtons(void) {
 }
 
 int readButton(int button) {
-    if (button < 0 || button >= BUTTON_COUNT) {
-        return 0;
+    if (button >= 0 && button < BUTTON_COUNT) {
+        button_state = *buttons;
+        return (button_state >> button) & 0b1;
     }
-    return (readButtons() >> button) & 1;
+    return 0;
 }
 
 // PS2/UART Functions
@@ -145,14 +148,15 @@ int uartReady(void) {
     return uart_status_state;
 }
 
-// VGA Functions
-// void setPixel(int x, int y, int color) {
-//     if ((x < 0 || x >= X_MAX) || (y < 0 || y >= Y_MAX) || (color < 0 || color >= C_MAX)) {
-//         return;
-//     }
-//     int addr = (y << X_BIT_WIDTH) | x;
-//     vga[addr] = color;
-// }
+/*VGA Functions
+void setPixel(int x, int y, int color) {
+    if ((x < 0 || x >= X_MAX) || (y < 0 || y >= Y_MAX) || (color < 0 || color >= C_MAX)) {
+        return;
+    }
+    int addr = (y << X_BIT_WIDTH) | x;
+    vga[addr] = color;
+}
+*/
 
 //// KEYBOARD SCANCODES (WIP)
 char readKey(int val) {

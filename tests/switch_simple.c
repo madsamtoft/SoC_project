@@ -7,18 +7,6 @@ int volatile * const switches = (int *)SWITCH_BASE_ADDR;
 static int led_state;
 static int switch_state;
 
-int main(void) {
-    while(1) {
-        for(int i = 0; i < 16; i++) {
-            if (getSwitch(i)) {
-                setLed(i, 1);
-            } else {
-                setLed(i, 0);
-            }
-        }
-    }
-}
-
 int getSwitch(int switch_num) {
     switch_state = *switches;
     return (switch_state >> switch_num) & 0x1;
@@ -31,4 +19,16 @@ void setLed(int led, int state) {
         led_state &= ~(1 << led);
     }
     *leds = led_state;
+}
+
+int main(void) {
+    while(1) {
+        for(int i = 0; i < 16; i++) {
+            if (getSwitch(i)) {
+                setLed(i, 1);
+            } else {
+                setLed(i, 0);
+            }
+        }
+    }
 }
