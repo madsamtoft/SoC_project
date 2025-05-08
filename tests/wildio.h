@@ -148,22 +148,13 @@ int uartReady(void) {
     return uart_status_state;
 }
 
-/*VGA Functions
-void setPixel(int x, int y, int color) {
-    if ((x < 0 || x >= X_MAX) || (y < 0 || y >= Y_MAX) || (color < 0 || color >= C_MAX)) {
-        return;
-    }
-    int addr = (y << X_BIT_WIDTH) | x;
-    vga[addr] = color;
-}
-*/
 // VGA Functions
-// void setPixel(int x, int y, char c) {
-//     int xOffset = x & 0x1ff; 
-//     int yOffset = (y & 0xff) << 9;
-//     volatile char * addrPtr = vga + xOffset + yOffset;
-//     *addrPtr = c;
-// }
+void setPixel(int x, int y, char c) {
+    int xOffset = x & 0x1ff; 
+    int yOffset = (y & 0xff) << 9;
+    volatile char * addrPtr = vga + xOffset + yOffset;
+    *addrPtr = c;
+}
 
 //// KEYBOARD SCANCODES (WIP)
 char readKey(int val) {
