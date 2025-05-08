@@ -1,36 +1,31 @@
 #include "wildio.h"
 
-void refreshScreen(char color);
-void setPixel(int x, int y, char c);
+void refreshScreen();
 
 int main(void) {
-    volatile char sw = 0;
-    while(1) {
-        sw = *switches;
-        refreshScreen(sw & 0b111111);
-    }
+    // int sw = 0;
+    // while(1) {
+        // sw = *switches;
+        refreshScreen();
+        // }
+    setLeds(0xFFFF);
     return 0;
 }
 
-void refreshScreen(char color) {
+void refreshScreen() {
+    int sw = 0;
     int x = 0;
     int y = 0;
 
     while(y < VGA_Y_MAX) {
         while(x < VGA_X_MAX) {
-            setPixel(x, y, color);
+            sw = *switches & 0b111111;
+            setPixel(x, y, sw);
+            // return; // Only draw one pixel
             x = x+1;
         }
         x = 0;
         y = y+1;
     }
     y = 0;
-}
-
-void setPixel(int x, int y, char c) {
-    int xOffset = x & 0x1ff; 
-    int yOffset = (y & 0xff) << 9;
-    volatile char * addrPtr = vga + xOffset + yOffset;
-    *addrPtr = c;
-    *leds = c;
 }

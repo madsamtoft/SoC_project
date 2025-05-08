@@ -1,12 +1,4 @@
 #include "wildio.h"
-// #include <stdio.h>
-
-// #define VGA_BASE_ADDR 0xf0100000
-// volatile char * const vga = (volatile char *) VGA_BASE_ADDR;
-
-
-void setPixel(int x, int y, char c);
-// void wait(int cc);
 
 int main(void) {
     int xlim = 320;
@@ -34,20 +26,4 @@ int main(void) {
         }
     }
     return 0;
-}
-
-// void wait(int cc) {
-//     volatile int i = 0;
-//     while(i < cc) {
-//         i += 1;
-//     }
-// }
-
-void setPixel(int x, int y, char c) {
-    int xOffset = x & 0x1ff;
-    int yOffset = (y & 0xff) << 9;
-    volatile char * addrPtr = vga + xOffset + yOffset;
-    // printf("%x, %d\n", addrPtr, c);
-    *addrPtr = c;
-    return;
 }
