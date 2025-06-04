@@ -39,7 +39,7 @@
 int volatile * const leds = (int *)LED_BASE_ADDR;
 int volatile * const switches = (int *)SWITCH_BASE_ADDR;
 int volatile * const buttons = (int *)BUTTON_BASE_ADDR;
-int volatile * const ps2 = (int *)PS2_BASE_ADDR;
+char volatile * const ps2 = (char *)PS2_BASE_ADDR;
 
 int volatile * const uart_status = (int *)UART_STATUS;
 int volatile * const uart_data = (int *)UART_DATA;
@@ -49,7 +49,7 @@ volatile char * const vga = (volatile char *) VGA_BASE_ADDR;
 static int led_state;
 static int switch_state;
 static int button_state;
-static int ps2_state;
+static char ps2_state;
 static int uart_status_state;
 static int vga_state[VGA_X_MAX * VGA_Y_MAX];
 
@@ -130,12 +130,12 @@ int readButton(int button) {
 }
 
 // PS2/UART Functions
-int readPs2(void) {
+char readPs2(void) {
     ps2_state = *ps2;
     return ps2_state;
 }
 
-int setUart(int value) {
+int setUart(char value) {
     *uart_data = value;
     return *uart_data;
 }
