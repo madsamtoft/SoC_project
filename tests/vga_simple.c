@@ -3,12 +3,10 @@
 void refreshScreen();
 
 int main(void) {
-    // int sw = 0;
-    // while(1) {
-        // sw = *switches;
-        refreshScreen();
-        // }
-    setLeds(0xFFFF);
+    while(1) {
+        refreshScreen(); 
+    }
+    setLeds(0xAAAA);
     return 0;
 }
 
@@ -20,8 +18,8 @@ void refreshScreen() {
     while(y < VGA_Y_MAX) {
         while(x < VGA_X_MAX) {
             sw = *switches & 0b111111;
+            setLeds(sw);
             setPixel(x, y, sw);
-            // return; // Only draw one pixel
             x = x+1;
         }
         x = 0;

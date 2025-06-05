@@ -42,7 +42,7 @@ volatile int * const ps2 = (int *)PS2_BASE_ADDR;
 volatile int * const uart_status = (int *)UART_STATUS;
 volatile int * const uart_data = (int *)UART_DATA;
 
-volatile char * const vga = (volatile char *) VGA_BASE_ADDR;
+volatile char * const vga = (char *) VGA_BASE_ADDR;
 volatile int * const vga_int = (int *) VGA_BASE_ADDR;
 
 static int led_state;
@@ -150,9 +150,9 @@ int uartReady(void) {
 
 // VGA Functions
 void setPixel(int x, int y, char c) {
-    int xOffset = x & 0x1ff; 
+    int xOffset = x & 0x1ff;
     int yOffset = (y & 0xff) << 9;
-    volatile char * addrPtr = vga + xOffset + yOffset;
+    volatile char * addrPtr = vga + (xOffset + yOffset);
     *addrPtr = c;
 }
 
