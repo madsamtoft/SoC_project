@@ -19,7 +19,6 @@
 #define SWITCH_BASE_ADDR 0xf0020000
 #define BUTTON_BASE_ADDR 0xf0030000
 #define PS2_BASE_ADDR    0xf0040000
-#define VGA_BASE_ADDR    0xf0100000
 
 #define UART_STATUS      0xf0000000
 #define UART_DATA        0xf0000004
@@ -27,11 +26,6 @@
 #define LED_COUNT 16
 #define SWITCH_COUNT 16
 #define BUTTON_COUNT 4
-
-#define VGA_X_MAX 320
-#define VGA_Y_MAX 240
-#define VGA_C_MAX 64
-
 
 // Variables
 volatile int * const leds = (int *)LED_BASE_ADDR;
@@ -42,8 +36,6 @@ volatile int * const ps2 = (int *)PS2_BASE_ADDR;
 volatile int * const uart_status = (int *)UART_STATUS;
 volatile int * const uart_data = (int *)UART_DATA;
 
-volatile int * const vga_int = (int *) VGA_BASE_ADDR;
-
 static int led_state;
 static int switch_state;
 static int button_state;
@@ -51,6 +43,13 @@ static int ps2_state;
 static int uart_status_state;
 
 // Functions
+void wait(volatile long delay) {
+    while (delay > 0) {
+        delay--;
+    }
+    return;
+}
+
 // Led Functions
 void setLeds(int value) {
     if (value > 0xffff) {

@@ -20,7 +20,7 @@ void refreshScreen() {
         while(x < VGA_X_LIM) {
             sw = *switches & 0b111111;
             // setLeds(sw);
-            setPixel(x, y, sw);
+            setPixel(x, y, sw, 0);
             x = x+1;
         }
         x = 0;
