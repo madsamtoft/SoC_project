@@ -31,15 +31,15 @@
 volatile int * const leds = (int *)LED_BASE_ADDR;
 volatile int * const switches = (int *)SWITCH_BASE_ADDR;
 volatile int * const buttons = (int *)BUTTON_BASE_ADDR;
-volatile int * const ps2 = (int *)PS2_BASE_ADDR;
+volatile char * const ps2 = (char *)PS2_BASE_ADDR;
 
 volatile int * const uart_status = (int *)UART_STATUS;
-volatile int * const uart_data = (int *)UART_DATA;
+volatile char * const uart_data = (char *)UART_DATA;
 
 static int led_state;
 static int switch_state;
 static int button_state;
-static int ps2_state;
+static char ps2_state;
 static int uart_status_state;
 
 // Functions
@@ -135,7 +135,7 @@ int readPs2(void) {
     return ps2_state;
 }
 
-int setUart(int value) {
+int setUart(char value) {
     *uart_data = value;
     return *uart_data;
 }

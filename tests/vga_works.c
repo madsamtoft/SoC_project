@@ -1,4 +1,5 @@
 #include "wildio.h"
+#include "wildvga.h"
 
 int main(void) {
     int xlim = 320;
@@ -11,7 +12,7 @@ int main(void) {
 
     while(1) {
         int sw = readSwitches() & 0b111111;
-        setPixel(x, y, sw);
+        setPixel(x, y, sw, 0);
         x = x+1;
         if (x >= xlim) {
             x = 0;
