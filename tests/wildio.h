@@ -42,7 +42,6 @@ volatile int * const ps2 = (int *)PS2_BASE_ADDR;
 volatile int * const uart_status = (int *)UART_STATUS;
 volatile int * const uart_data = (int *)UART_DATA;
 
-volatile char * const vga = (char *) VGA_BASE_ADDR;
 volatile int * const vga_int = (int *) VGA_BASE_ADDR;
 
 static int led_state;
@@ -50,7 +49,6 @@ static int switch_state;
 static int button_state;
 static int ps2_state;
 static int uart_status_state;
-// static int vga_state[VGA_X_MAX * VGA_Y_MAX];
 
 // Functions
 // Led Functions
@@ -146,14 +144,6 @@ int setUart(int value) {
 int uartReady(void) {
     uart_status_state = *uart_status;
     return uart_status_state;
-}
-
-// VGA Functions
-void setPixel(int x, int y, char c) {
-    int xOffset = x & 0x1ff;
-    int yOffset = (y & 0xff) << 9;
-    volatile char * addrPtr = vga + (xOffset + yOffset);
-    *addrPtr = c;
 }
 
 //// KEYBOARD SCANCODES (WIP)

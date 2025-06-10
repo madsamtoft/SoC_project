@@ -1,4 +1,5 @@
 #include "wildio.h"
+#include "wildvga.h"
 
 void refreshScreen();
 
@@ -15,10 +16,10 @@ void refreshScreen() {
     int x = 0;
     int y = 0;
 
-    while(y < VGA_Y_MAX) {
-        while(x < VGA_X_MAX) {
+    while(y < VGA_Y_LIM) {
+        while(x < VGA_X_LIM) {
             sw = *switches & 0b111111;
-            setLeds(sw);
+            // setLeds(sw);
             setPixel(x, y, sw);
             x = x+1;
         }
