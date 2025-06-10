@@ -27,6 +27,11 @@
 #define SWITCH_COUNT 16
 #define BUTTON_COUNT 4
 
+#define BTN_UP    0b0001
+#define BTN_RIGHT 0b0010
+#define BTN_DOWN  0b0100
+#define BTN_LEFT  0b1000
+
 // Variables
 volatile int * const leds = (int *)LED_BASE_ADDR;
 volatile int * const switches = (int *)SWITCH_BASE_ADDR;
@@ -43,7 +48,7 @@ static int ps2_state;
 static int uart_status_state;
 
 // Functions
-void wait(volatile long delay) {
+void wait(volatile int delay) {
     while (delay > 0) {
         delay--;
     }
