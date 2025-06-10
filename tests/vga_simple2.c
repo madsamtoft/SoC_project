@@ -12,7 +12,7 @@ int main(void) {
         while(y < VGA_Y_LIM) {
             while(x < VGA_X_LIM) {
                 sw = *switches & 0b111111;
-                setPixel(x, y, sw);
+                setPixel(x, y, sw, 0);
                 // return 1; // Only draw one pixel
                 x = x+1;
             }
