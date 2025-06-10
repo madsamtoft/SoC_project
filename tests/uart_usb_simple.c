@@ -8,6 +8,7 @@ int main(void) {
         ps2_data = readPs2();
         //key = readKey(ps2_data);
         //setUart(key);
-        setUart(ps2_data);
+        setUart(ps2_data+'0');
     }
+    setLeds(0xFFFF);
 }
