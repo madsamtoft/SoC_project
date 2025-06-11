@@ -20,6 +20,9 @@
 #define BUTTON_BASE_ADDR 0xf0030000
 #define PS2_BASE_ADDR    0xf0040000
 
+#define TIMER_START_ADDR 0xf0050000
+#define TIMER_END_ADDR   0xf0050001
+
 #define UART_STATUS      0xf0000000
 #define UART_DATA        0xf0000004
 
@@ -33,6 +36,9 @@ volatile int * const switches = (int *)SWITCH_BASE_ADDR;
 volatile int * const buttons = (int *)BUTTON_BASE_ADDR;
 volatile char * const ps2 = (char *)PS2_BASE_ADDR;
 
+volatile int * const timer_start = (int *)TIMER_START_ADDR;
+volatile int * const timer_end = (int *)TIMER_END_ADDR;
+
 volatile int * const uart_status = (int *)UART_STATUS;
 volatile char * const uart_data = (char *)UART_DATA;
 
@@ -40,6 +46,7 @@ static int led_state;
 static int switch_state;
 static int button_state;
 static char ps2_state;
+
 static int uart_status_state;
 
 // Functions
@@ -48,6 +55,17 @@ void wait(volatile long delay) {
         delay--;
     }
     return;
+}
+
+void timer() {
+    *timer_start = 1;
+    int count = 0;
+    while(1) {
+        if(*timer_end == 1) {
+            return;
+        }
+        count += 1;
+    }
 }
 
 // Led Functions
