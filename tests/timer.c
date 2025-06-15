@@ -11,12 +11,3 @@ int main(void) {
         waitTimer();
     }
 }
-
-/*
-With the code and this startTimer, the code will tage 1.1ms to run each iteration in simulation
-
-void startTimer(int time) {
-    int time_ms = time * 100; // Convert to milliseconds (approximately)
-    *timer_start = time_ms;
-}
-*/
