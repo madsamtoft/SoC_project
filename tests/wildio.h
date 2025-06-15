@@ -98,33 +98,6 @@ int setLed(int led, int value) {
     return led_state;
 }
 
-/*
-void toggleLed(int led) {
-    if (led < 0 || led >= LED_COUNT) {
-        return;
-    }
-    led_state ^= (1 << led);
-    *leds = led_state;
-}
-
-void clearLeds(void) {
-    led_state = 0;
-    *leds = led_state;
-}
-
-int returnLeds(void) {
-    int count = 0;
-    int value = led_state;
-
-    for (int i = 0; i < LED_COUNT; i++) {
-        if (value & (1 << i)) {
-            count++;
-        }
-    }
-    return count;
-}
-*/
-
 // Switch Functions
 int readSwitches(void) {
     switch_state = *switches;
