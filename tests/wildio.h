@@ -69,6 +69,11 @@ void waitTimer() {
     count = 0;
 }
 
+void timer(int time) {
+    startTimer(time);
+    waitTimer();
+}
+
 // Led Functions
 void setLeds(int value) {
     if (value > 0xffff) {
