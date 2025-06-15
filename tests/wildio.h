@@ -21,7 +21,7 @@
 #define PS2_BASE_ADDR    0xf0040000
 
 #define TIMER_START_ADDR 0xf0050000
-#define TIMER_END_ADDR   0xf0050001
+#define TIMER_END_ADDR   0xf0050004
 
 #define UART_STATUS      0xf0000000
 #define UART_DATA        0xf0000004
@@ -57,15 +57,17 @@ void wait(volatile long delay) {
     return;
 }
 
-void timer() {
-    *timer_start = 1;
+void startTimer(int time) {
+    int time_ms = time * 100; // Convert to milliseconds (approximately)
+    *timer_start = time_ms;
+}
+
+void waitTimer() {
     int count = 0;
-    while(1) {
-        if(*timer_end == 1) {
-            return;
-        }
+    while(*timer_end != 1) {
         count += 1;
     }
+    count = 0;
 }
 
 // Led Functions
