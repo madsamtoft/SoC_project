@@ -13,20 +13,15 @@ int main(void) {
             case W:
                 setUart('1');
                 break;
-
             case A:
                 setUart('2');
                 break;
-
-            case S:                // Another example code
+            case S:
                 setUart('3');
                 break;
-
-            case D:                // Another example code
+            case D:
                 setUart('4');
                 break;
-
-
             default:
                 setUart('0');
                 break;
