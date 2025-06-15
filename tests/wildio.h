@@ -58,8 +58,7 @@ void wait(volatile long delay) {
 }
 
 void startTimer(int time) {
-    int time_ms = time * 100; // Convert to milliseconds (approximately)
-    *timer_start = time_ms;
+    *timer_start = time;
 }
 
 void waitTimer() {
