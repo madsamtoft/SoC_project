@@ -57,6 +57,7 @@ void wait(volatile long delay) {
     return;
 }
 
+// Hardware timer/wait function
 void startTimer(int time) {
     *timer_target = time;
 }

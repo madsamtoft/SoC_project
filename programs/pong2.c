@@ -1,7 +1,7 @@
 #include "../lib/wildvga.h"
 #include "../lib/wildio.h"
 
-#define BALL_RADIUS 3
+#define BALL_RADIUS 4
 
 struct pongBall {
     int x;
@@ -15,29 +15,33 @@ void drawBall(Ball *ball, char color);
 void updateBall(Ball* ball);
 
 int main() {
-    Ball ball = {160, 120, 1, 1}; // Center of screen
-    Ball *ballPointer = &ball;
+    int x_start = VGA_X_LIM/2;
+    int y_start = VGA_Y_LIM/2;
 
-    drawScreen(BLACK); // Clear screen
+    Ball ball = {x_start, y_start, 1, 0}; // Center of screen
 
     while(1) {
-        // Erase old ball
-        drawBall(ballPointer, BLACK);
+        // Instantiate timer
+        startTimer(500);
 
+        // Erase last ball
+        drawBall(&ball, BLACK);
+        
         // Update ball position
-        updateBall(ballPointer);
+        updateBall(&ball);
 
-        // Draw new ball
-        drawBall(ballPointer, WHITE);
+        // Draw ball
+        drawBall(&ball, WHITE);
 
-        // Delay to control speed (adjust for your system)
-        wait(100000);
+        // Wait for timer to run out
+        waitTimer();
     }
-
+    setLeds(0xFFFF);
     return 0;
 }
 
 void drawBall(Ball* ball, char color) {
+    //drawRectangle(ball->x, ball->y, BALL_RADIUS, BALL_RADIUS, color, 0);
     drawCircle(ball->x, ball->y, BALL_RADIUS, color, 0);
 }
 
@@ -48,11 +52,11 @@ void updateBall(Ball* ball) {
     int vy = ball->vy;
 
     // Bounce off left/right walls
-    if (x - BALL_RADIUS <= 0 || x + BALL_RADIUS >= VGA_X_LIM - 1) {
+    if (x <= 0 || x + (BALL_RADIUS*2) >= VGA_X_LIM) {
         vx *= -1;
     }
     // Bounce off top/bottom walls
-    if (y - BALL_RADIUS <= 0 || y + BALL_RADIUS >= VGA_Y_LIM - 1) {
+    if (y <= 0 || y + (BALL_RADIUS*2) >= VGA_Y_LIM) {
         vy *= -1;
     }
 
