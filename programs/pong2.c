@@ -49,32 +49,15 @@ void drawBall(Ball* ball, char color) {
 }
 
 void updateBall(Ball* ball) {
-    int x = ball->x;
-    int y = ball->y;
-    int vx = ball->vx;
-    int vy = ball->vy;
-
-    // Bounce off left/right walls
-    if (x <= 0) {
-        vx *= -1;
-        x = 0;
-    } else if (x + (BALL_RADIUS*2) >= VGA_X_LIM) {
-        vx *= -1;
-        x = VGA_X_LIM - 2*BALL_RADIUS;
+    if (ball->x <= 0 || ball->x + 2*BALL_RADIUS >= VGA_X_LIM) {
+        ball->vx *= -1;
+    }
+    if (ball->y <= 0 || ball->y + 2*BALL_RADIUS >= VGA_Y_LIM) {
+        ball->vy *= -1;
     }
 
-    // Bounce off top/bottom walls
-    if (y <= 0) {
-        vy *= -1;
-        y = 0;
-    } else if (y + (BALL_RADIUS*2) >= VGA_Y_LIM) {
-        vy *= -1;
-        y = VGA_Y_LIM - 2*BALL_RADIUS;
-    }
-    
+    ball->x += ball->vx;
+    ball->y += ball->vy;
 
-    ball->x += vx;
-    ball->y += vy;
-    ball->vx = vx;
-    ball->vy = vy;
+    setLeds(ball->x); // Debug
 }
