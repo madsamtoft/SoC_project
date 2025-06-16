@@ -1,4 +1,4 @@
-#include "../wildvga.h"
+#include "../../lib/wildvga.h"
 
 void nextColor(char* r, char* g, char* b);
 void wait(volatile int delay);

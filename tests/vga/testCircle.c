@@ -1,4 +1,4 @@
-#include "../wildvga.h"
+#include "../../lib/wildvga.h"
 
 int main(void) {
     int x = 100;

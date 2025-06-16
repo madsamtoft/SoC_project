@@ -1,5 +1,5 @@
-#include "wildio.h"
-#include "wildvga.h"
+#include "../lib/wildio.h"
+#include "../lib/wildvga.h"
 
 void refreshScreen();
 

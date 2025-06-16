@@ -1,4 +1,4 @@
-#include "../wildvga.h"
+#include "../../lib/wildvga.h"
 
 void wait(volatile int delay);
 

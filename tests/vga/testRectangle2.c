@@ -1,5 +1,5 @@
-#include "../wildvga.h"
-#include "../wildio.h"
+#include "../../lib/wildvga.h"
+#include "../../lib/wildio.h"
 
 //void wait(volatile int delay);
 

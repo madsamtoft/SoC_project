@@ -1,5 +1,5 @@
-#include "../tests/wildvga.h"
-#include "../tests/wildio.h"
+#include "../lib/wildvga.h"
+#include "../lib/wildio.h"
 
 #define BALL_RADIUS 3
 

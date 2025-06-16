@@ -1,4 +1,4 @@
-#include "wildio.h"
+#include "../lib/wildio.h"
 
 int main(void) {
     volatile char ps2_data;

@@ -1,4 +1,4 @@
-#include "wildio.h"
+#include "../lib/wildio.h"
 #include <stdio.h>
 
 int main(void) {

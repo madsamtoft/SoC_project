@@ -20,8 +20,8 @@
 #define BUTTON_BASE_ADDR 0xf0030000
 #define PS2_BASE_ADDR    0xf0040000
 
-#define TIMER_START_ADDR 0xf0050000
-#define TIMER_END_ADDR   0xf0050004
+#define TIMER_TARGET_ADDR 0xf0050000
+#define TIMER_DONE_ADDR    0xf0050004
 
 #define UART_STATUS      0xf0000000
 #define UART_DATA        0xf0000004
@@ -36,8 +36,8 @@ volatile int * const switches = (int *)SWITCH_BASE_ADDR;
 volatile int * const buttons = (int *)BUTTON_BASE_ADDR;
 volatile char * const ps2 = (char *)PS2_BASE_ADDR;
 
-volatile int * const timer_start = (int *)TIMER_START_ADDR;
-volatile int * const timer_end = (int *)TIMER_END_ADDR;
+volatile int * const timer_target = (int *)TIMER_TARGET_ADDR;
+volatile int * const timer_done = (int *)TIMER_DONE_ADDR;
 
 volatile int * const uart_status = (int *)UART_STATUS;
 volatile char * const uart_data = (char *)UART_DATA;
@@ -58,12 +58,12 @@ void wait(volatile long delay) {
 }
 
 void startTimer(int time) {
-    *timer_start = time;
+    *timer_target = time;
 }
 
 void waitTimer() {
     int count = 0;
-    while(*timer_end != 1) {
+    while(*timer_done != 1) {
         count += 1;
     }
     count = 0;
