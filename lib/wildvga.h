@@ -109,4 +109,65 @@ void drawCircle(int x, int y, unsigned int r, unsigned char c, char wrap) {
     }
 }
 
+#include "../lib/wildvga.h"
+
+// Draws a static 8x8 poké ball starting at top-left (x, y)
+void drawBall8x8(int x, int y) {
+    const char sprite[8][8] = {
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 1, 1, 1, 1, 1, 1, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1},
+        {0, 1, 1, 1, 1, 1, 1, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0}
+    };
+
+    for (int dy = 0; dy < 8; dy++) {
+        for (int dx = 0; dx < 8; dx++) {
+            char pixel = sprite[dy][dx];
+            char color;
+
+            switch (pixel) {
+                case 1: color = WHITE; break;
+                case 2: color = BLACK; break;
+                default: continue; // Skip background
+            }
+            setPixel(x + dx, y + dy, color, 0);
+        }
+    }
+}
+
+void drawPaddle(int x, int y, char color) {
+    const int width = 8; // Width of the paddle
+    const int height = 16; // Height of the paddle
+    const char sprite[height][width] = {
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0}
+    };
+
+    for (int dy = 0; dy < height; dy++) {
+        for (int dx = 0; dx < width; dx++) {
+            if (sprite[dy][dx]) {
+                setPixel(x + dx, y + dy, color, 0);
+            }
+        }
+    }
+}
+
 #endif

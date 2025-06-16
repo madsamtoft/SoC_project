@@ -24,14 +24,16 @@ int main() {
         // Instantiate timer
         startTimer(500);
 
-        // Erase last ball
+        // Erase last
         drawBall(&ball, BLACK);
+        drawPaddle(0, 0, BLACK);
         
         // Update ball position
         updateBall(&ball);
 
-        // Draw ball
+        // Draw
         drawBall(&ball, WHITE);
+        drawPaddle(0, 0, WHITE);
 
         // Wait for timer to run out
         waitTimer();
@@ -45,7 +47,8 @@ int main() {
 
 void drawBall(Ball* ball, char color) {
     //drawRectangle(ball->x, ball->y, BALL_RADIUS, BALL_RADIUS, color, 0);
-    drawCircle(ball->x, ball->y, BALL_RADIUS, color, 0);
+    drawBall8x8(ball->x, ball->y);
+    //drawCircle(ball->x, ball->y, BALL_RADIUS, color, 0);
 }
 
 void updateBall(Ball* ball) {
