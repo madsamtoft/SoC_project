@@ -140,6 +140,10 @@ int readPs2(void) {
     return ps2_state;
 }
 
+unsigned char getUart() {
+    return *uart_data;
+}
+
 int setUart(char value) {
     *uart_data = value;
     return *uart_data;

@@ -27,15 +27,27 @@ unsigned char color(unsigned char r, unsigned char g, unsigned char b) {
     return (r << 4) + (g << 2) + (b);
 }
 
+char pixelOOB(int x, int y) {
+    // Check if a given (x, y) coordinate is out of bounds
+    return x < 0 || x >= VGA_X_LIM || y < 0 || y >= VGA_Y_LIM;
+}
+
 void setPixel(int x, int y, char c, char wrap) {
-    if(wrap) {
-        x %= VGA_X_LIM;
-        y %= VGA_Y_LIM;
+    // Set the pixel at the given (x, y) coordinate to color c
+    // if wrap is true, then overflowing coordinates will be normalized
+    // (i.e. (x, y) = (325, 260) would be drawn at (5, 20))
+    if(pixelOOB(x, y)) {
+        if(wrap) {
+            x %= VGA_X_LIM;
+            y %= VGA_Y_LIM;
+        } else {
+            return;
+        }
     }
 
-    int xOffset = x & 0x1ff;
-    int yOffset = (y & 0xff) << 9;
-    volatile char * addrPtr = vga + (xOffset + yOffset); // Only works because charsize is 1 byte
+    unsigned int xOffset = x & 0x1ff;
+    unsigned int yOffset = (y & 0xff) << 9;
+    volatile char * addrPtr = (char *) ((unsigned int)vga + (xOffset + yOffset)); // Only works because charsize is 1 byte
     *addrPtr = c;
 }
 
@@ -69,22 +81,15 @@ void drawRectangle(int x, int y, int w, int h, char c, char wrap) {
     }
 }
 
-int sqrtApprox(int n) {
-    int x = 0;
-    while(x*x <= n) {
-        x++;
-    }
-    if((x*x - n) <= (n - (x-1)*(x-1))) {
-        return x;
-    }
-    return x-1;
+void drawSquare(int x, int y, int l, char c, char wrap) {
+    drawRectangle(x, y, l, l, c, wrap);
 }
 
 int inCircle(int x, int y, int xCenter, int yCenter, unsigned int r) {
     int dx = x - xCenter;
     int dy = y - yCenter;
-    int d = sqrtApprox(dx*dx + dy*dy);
-    if (d <= r) {
+    int distSq = dx*dx + dy*dy;
+    if (distSq <= r*r) {
         return 1;
     }
     return 0;
@@ -107,6 +112,13 @@ void drawCircle(int x, int y, unsigned int r, unsigned char c, char wrap) {
             }
         }
     }
+}
+
+void drawDigit(int x, int y, unsigned char c, unsigned char n) {
+    if(n > 9) {
+        return;
+    }
+
 }
 
 #endif

@@ -12,7 +12,7 @@ int main(void) {
         c = color(r, g, b);
         drawScreen(c); 
         nextColor(&r, &g, &b);
-        wait(5000000);
+        // wait(5000000);
     }
     return 0;
 }
