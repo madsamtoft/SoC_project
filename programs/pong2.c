@@ -22,26 +22,22 @@ int main() {
 
     while(1) {
         // Instantiate timer
-        startTimer(500);
+        startTimer(1000);
 
         // Erase last
         drawBall(&ball, BLACK);
-        drawPaddle(1, 1, BLACK);
+        //drawPaddle(1, 1, BLACK);
         
         // Update ball position
         updateBall(&ball);
 
         // Draw
         drawBall(&ball, WHITE);
-        drawPaddle(1, 1, WHITE);
+        //drawPaddle(1, 1, WHITE);
 
         // Wait for timer to run out
         waitTimer();
     }
-    
-    startTimer(1000);
-    setLeds(0xFFFF);
-    waitTimer();
     return 0;
 }
 
@@ -52,20 +48,20 @@ void drawBall(Ball* ball, char color) {
 }
 
 void updateBall(Ball* ball) {
-    int oldX = ball->x;
-    int oldY = ball->y;
+    int x = ball->x;
+    int y = ball->y;
     int vx = ball->vx;
     int vy = ball->vy;
 
-    if(oldX+BALL_RADIUS*2 >= VGA_X_LIM-1 || oldX <= 0) {
+    if(x <= BALL_RADIUS*2 || x+BALL_RADIUS*2 >= VGA_X_LIM) {
         vx *= -1;
     }
-    if(oldY+BALL_RADIUS*2 >= VGA_Y_LIM-1 || oldY <= 0) {
+    if(y <= BALL_RADIUS*2 || y+BALL_RADIUS*2 >= VGA_Y_LIM) {
         vy *= -1;
     }
 
-    int newX = oldX + vx;
-    int newY = oldY + vy;
+    int newX = x + vx;
+    int newY = y + vy;
 
     ball->vx = vx;
     ball->vy = vy;
