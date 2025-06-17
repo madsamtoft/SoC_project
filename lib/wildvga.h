@@ -124,29 +124,28 @@ void drawDigit(int x, int y, unsigned char c, unsigned char n) {
 }
 
 void drawPaddle(int x, int y, char color) {
-    
-    const char sprite[PADDLE_HEIGHT][PADDLE_WIDTH] = {
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0},
-        {0, 0, 1, 1, 1, 1, 0, 0}
+    const char sprite[PADDLE_HEIGHT] = {
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100,
+        0b00111100
     };
 
     for (int dy = 0; dy < PADDLE_HEIGHT; dy++) {
         for (int dx = 0; dx < PADDLE_WIDTH; dx++) {
-            if (sprite[dy][dx]) {
+            if (sprite[dy] & (1 << (PADDLE_WIDTH - 1 - dx))) {
                 setPixel(x + dx, y + dy, color, 0);
             }
         }
