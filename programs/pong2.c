@@ -25,15 +25,15 @@ int main() {
         startTimer(500);
 
         // Erase last
-        //drawBall(&ball, BLACK);
-        //drawPaddle(0, 0, BLACK);
+        drawBall(&ball, BLACK);
+        drawPaddle(1, 1, BLACK);
         
         // Update ball position
         updateBall(&ball);
 
         // Draw
         drawBall(&ball, WHITE);
-        drawPaddle(0, 0, WHITE);
+        drawPaddle(1, 1, WHITE);
 
         // Wait for timer to run out
         waitTimer();
@@ -47,10 +47,33 @@ int main() {
 
 void drawBall(Ball* ball, char color) {
     //drawRectangle(ball->x, ball->y, BALL_RADIUS, BALL_RADIUS, color, 0);
-    drawBall4x4(ball->x, ball->y);
-    //drawCircle(ball->x, ball->y, BALL_RADIUS, color, 0);
+    //drawBall4x4(ball->x, ball->y);
+    drawCircle(ball->x, ball->y, BALL_RADIUS, color, 0);
 }
 
+void updateBall(Ball* ball) {
+    int oldX = ball->x;
+    int oldY = ball->y;
+    int vx = ball->vx;
+    int vy = ball->vy;
+
+    if(oldX+BALL_RADIUS*2 >= VGA_X_LIM-1 || oldX <= 0) {
+        vx *= -1;
+    }
+    if(oldY+BALL_RADIUS*2 >= VGA_Y_LIM-1 || oldY <= 0) {
+        vy *= -1;
+    }
+
+    int newX = oldX + vx;
+    int newY = oldY + vy;
+
+    ball->vx = vx;
+    ball->vy = vy;
+    ball->x = newX;
+    ball->y = newY;
+}
+
+/*
 void updateBall(Ball* ball) {
     if (ball->x <= 0 || ball->x + 2*BALL_RADIUS >= VGA_X_LIM) {
         ball->vx *= -1;
@@ -64,3 +87,5 @@ void updateBall(Ball* ball) {
 
     setLeds(ball->x); // Debug
 }
+*/
+
