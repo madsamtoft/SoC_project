@@ -25,8 +25,8 @@ int main() {
         startTimer(500);
 
         // Erase last
-        drawBall(&ball, BLACK);
-        drawPaddle(0, 0, BLACK);
+        //drawBall(&ball, BLACK);
+        //drawPaddle(0, 0, BLACK);
         
         // Update ball position
         updateBall(&ball);
@@ -47,7 +47,7 @@ int main() {
 
 void drawBall(Ball* ball, char color) {
     //drawRectangle(ball->x, ball->y, BALL_RADIUS, BALL_RADIUS, color, 0);
-    drawBall8x8(ball->x, ball->y);
+    drawBall4x4(ball->x, ball->y);
     //drawCircle(ball->x, ball->y, BALL_RADIUS, color, 0);
 }
 
