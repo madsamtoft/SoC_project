@@ -1,5 +1,5 @@
-#include "../tests/wildvga.h"
-#include "../tests/wildio.h"
+#include "../lib/wildvga.h"
+#include "../lib/wildio.h"
 
 #define BALL_SIZE 6
 #define BALL_SPEED 1

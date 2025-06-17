@@ -14,6 +14,9 @@ const char RED =    0b110000;
 const char GREEN =  0b001100;
 const char BLUE =   0b000011;
 
+#define PADDLE_WIDTH 8
+#define PADDLE_HEIGHT 16
+
 unsigned char color(unsigned char r, unsigned char g, unsigned char b) {
     if(r > 0b11) {
         r = 0b11;
@@ -118,7 +121,58 @@ void drawDigit(int x, int y, unsigned char c, unsigned char n) {
     if(n > 9) {
         return;
     }
+}
 
+#include "../lib/wildvga.h"
+
+// Draws a static 8x8 poké ball starting at top-left (x, y)
+void drawBall4x4(int x, int y, char color) {
+    const char bitmap[4][4] = {
+        {0, 1, 1, 0},
+        {1, 1, 1, 1},
+        {1, 1, 1, 1},
+        {0, 1, 1, 0}
+    };
+
+    for (int dy = 0; dy < 4; dy++) {
+        for (int dx = 0; dx < 4; dx++) {
+            if (bitmap[dy][dx]) {
+                setPixel(x + dx, y + dy, color, 0);
+            }
+        }
+    }
+}
+
+
+
+void drawPaddle(int x, int y, char color) {
+    
+    const char sprite[PADDLE_HEIGHT][PADDLE_WIDTH] = {
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0},
+        {0, 0, 1, 1, 1, 1, 0, 0}
+    };
+
+    for (int dy = 0; dy < PADDLE_HEIGHT; dy++) {
+        for (int dx = 0; dx < PADDLE_WIDTH; dx++) {
+            if (sprite[dy][dx]) {
+                setPixel(x + dx, y + dy, color, 0);
+            }
+        }
+    }
 }
 
 #endif

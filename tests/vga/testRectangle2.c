@@ -1,7 +1,7 @@
-#include "../wildvga.h"
-#include "../wildio.h"
+#include "../../lib/wildvga.h"
+#include "../../lib/wildio.h"
 
-void wait(volatile int delay);
+//void wait(volatile int delay);
 
 int main(void) {
     int x = 0;
@@ -29,9 +29,11 @@ int main(void) {
     return 0;
 }
 
+/*
 void wait(volatile int delay) {
     while (delay > 0) {
         delay--;
     }
     return;
 }
+*/
