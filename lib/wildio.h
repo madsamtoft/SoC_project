@@ -68,7 +68,7 @@ void startTimer(int time) {
 }
 
 void waitTimer() {
-    int count = 0;
+    volatile int count = 0;
     while(*timer_done != 1) {
         count += 1;
     }
