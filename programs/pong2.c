@@ -84,16 +84,23 @@ void drawBall(Ball ball, char color) {
     int x = ball.x;
     int y = ball.y;
 
-    // drawCircle(x, y, BALL_RADIUS, WHITE, 0);
-    drawSquare(x, y, BALL_SIZE, color, 0);
-
     //DEBUGGING¨
     if (color == WHITE) {
         for (int i = 0; i < VGA_Y_LIM; i++) {
-            setPixel(ball.x, i, BLUE, 0);               // xLeft
-            setPixel(ball.x + BALL_SIZE, i, GREEN, 0);  // xRight
+            setPixel(x, i, BLUE, 0);               // xLeft
+            setPixel(x + BALL_SIZE, i, GREEN, 0);  // xRight
+        }
+    } else {
+        for (int i = 0; i < VGA_Y_LIM; i++) {
+            setPixel(x, i, BLACK, 0);               // xLeft
+            setPixel(x + BALL_SIZE, i, BLACK, 0);  // xRight
         }
     }
+
+    // drawCircle(x, y, BALL_RADIUS, WHITE, 0);
+    drawSquare(x, y, BALL_SIZE, color, 0);
+
+    
 }
 
 void updateBall(Ball* ball, Wall lWall) {
