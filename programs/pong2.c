@@ -54,20 +54,25 @@ int main() {
 
     while(1) {
         startTimer(1000/30);
+        /*
         btns = readButtons();
         btnU = (btns >> 0) & 0b1;
         btnD = (btns >> 2) & 0b1;
         btnL = (btns >> 3) & 0b1;
         btnR = (btns >> 1) & 0b1;
         sw = readSwitches();
+        */
+
+        int key = readPs2();
+        
 
         drawBall(ball, BLACK);
         drawWall(wallLeft, BLACK);
         drawWall(wallRight, BLACK);
 
         updateBall(ballPtr, wallLeft);
-        updateWall(wallLeftPtr, btnU, btnL);
-        updateWall(wallRightPtr, btnR, btnD);
+        updateWall(wallLeftPtr, key, 0);
+        updateWall(wallRightPtr, 0, key);
         
         //drawScreen(sw & 0b111111);
         drawBall(ball, WHITE);
@@ -164,16 +169,36 @@ void drawWall(Wall wall, char color) {
     drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, color, 0);
 }
 
-void updateWall(Wall* wall, char u, char d) {
+void updateWall(Wall* wall, char leftKey, char rightKey) {
     int y = wall->y;
     int yTop = y;
     int yBot = y + WALL_HEIGHT;
 
+    if (yBot < VGA_Y_LIM - WALL_MARGIN && yTop > WALL_MARGIN) {
+        switch(leftKey & 0xFF) {
+            case W: y -= WALL_SPEED; break;
+            case A: y += WALL_SPEED; break;
+            default: break;
+        }
+        switch (rightKey & 0xFF) {
+            case D: y -= WALL_SPEED; break;
+            case S: y += WALL_SPEED; break;
+            default: break;
+        }
+    }
+
+    
+    
+
+
+    /* buttons
     if(d && !u && yBot < VGA_Y_LIM - WALL_MARGIN) {
         y += WALL_SPEED;
     } else if (!d && u && yTop > 0 + WALL_MARGIN) {
         y -= WALL_SPEED;
     }
+    */
+    
 
     wall->y = y;
 }
