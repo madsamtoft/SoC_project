@@ -125,11 +125,8 @@ int readButtons(void) {
 }
 
 int readButton(int button) {
-    if (button >= 0 && button < BUTTON_COUNT) {
-        button_state = *buttons;
-        return (button_state >> button) & 0b1;
-    }
-    return 0;
+    button_state = *buttons;
+    return button_state & button;
 }
 
 // PS2/UART Functions
