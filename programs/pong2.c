@@ -89,7 +89,7 @@ int main() {
 void drawBall(Ball ball, char color) {
     int x = ball.x;
     int y = ball.y;
-
+    
     // drawCircle(x, y, BALL_RADIUS, WHITE, 0);
     drawSquare(x, y, BALL_SIZE, color, 0);
 }
@@ -110,47 +110,51 @@ void updateBall(Ball* ball, Wall lWall) {
     int lWall_yBot = lWall.y + WALL_HEIGHT;
 
     // Paddle collision — must come before wall collision
-    /* CHAT
-    if (xLeft <= lWall_xRight &&
-        xRight >= lWall.x &&
-        yBot >= lWall_yTop &&
-        yTop <= lWall_yBot &&
-        vx < 0) {
+    if(x <= lWall_xRight && y <= lWall_yBot && y >= lWall_yTop && vx < 0) {
         vx *= -1;
     }
-    */
-    
-    if(xLeft <= lWall_xRight & yTop <= lWall_yBot & yBot >= lWall_yTop) {
-        vx *= -1;
-    }
-    
 
     // Left or right screen edge bounce
-    else if (xLeft <= 0 || xRight >= VGA_X_LIM - 4) { // -4 only for my shitty screen
-        vx *= -1;
+    if (xRight >= VGA_X_LIM - 4 && vx > 0) { // -4 only for my shitty screen
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        vx = -BALL_SPEED;
+    }
+    else if (xLeft <= 0 && vx < 0) {
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        vx = BALL_SPEED;
     }
 
+
     // Top/bottom screen bounce
-    else if (yTop <= 0 || yBot >= VGA_Y_LIM) {
+    if (yTop <= 0 && vy < 0) {
+        vy *= -1;
+    }
+    else if (yBot >= VGA_Y_LIM && vy > 0) {
         vy *= -1;
     }
 
     //DEBUGGING
     for (int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(lWall_xRight, i, RED, 0);
-    }
+        setPixel(lWall_xRight, i, RED, 0); // wall Right
 
-    //DEBUGGING
-    for (int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(x, i, BLUE, 0);        // xLeft
-        setPixel(xRight, i, GREEN, 0);  // xRight
+        setPixel(x, i, BLUE, 0);        // ball Left
+        setPixel(xRight, i, GREEN, 0);  // ball Right
     }
-
 
     ball->x = x + vx;
     ball->y = y + vy;
     ball->vx = vx;
     ball->vy = vy;
+
+    // Check if the ball is out of bounds
+    if (x < 0 || x >= VGA_X_LIM || y < 0 || y >= VGA_Y_LIM) {
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        ball->x = x;
+        ball->y = y;
+    }
 }
 
 
