@@ -37,7 +37,7 @@ int main() {
 
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
     Wall* wallLeftPtr = &wallLeft;
-    Wall wallRight = {VGA_X_LIM - 2*WALL_MARGIN - 2*WALL_WIDTH, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
+    Wall wallRight = {VGA_X_LIM - 2*WALL_MARGIN - 2*WALL_WIDTH, WALL_MARGIN};  //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
     Wall* wallRightPtr = &wallRight;
 
     volatile char btns = 0;
@@ -47,9 +47,6 @@ int main() {
     char btnR = 0;
     volatile char sw = 0;
 
-
-    // Initialize the screen as black
-    drawScreen(BLACK);
 
     //temp
     setPixel(1, 1, RED, 0);
@@ -63,9 +60,6 @@ int main() {
         btnL = (btns >> 3) & 0b1;
         btnR = (btns >> 1) & 0b1;
         sw = readSwitches();
-
-        //int key = readPs2();
-        
 
         drawBall(ball, BLACK);
         drawWall(wallLeft, BLACK);
@@ -120,7 +114,7 @@ void updateBall(Ball* ball, Wall lWall) {
     }
     */
     
-    if(xLeft <= lWall_xRight & yTop <= lWall_yBot & yBot >= lWall_yTop) {
+    if(xLeft <= lWall_xRight && yTop <= lWall_yBot && yBot >= lWall_yTop) {
         vx *= -1;
     }
     
@@ -134,18 +128,6 @@ void updateBall(Ball* ball, Wall lWall) {
     else if (yTop <= 0 || yBot >= VGA_Y_LIM) {
         vy *= -1;
     }
-
-    //DEBUGGING
-    for (int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(lWall_xRight, i, RED, 0);
-    }
-
-    //DEBUGGING
-    for (int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(x, i, BLUE, 0);        // xLeft
-        setPixel(xRight, i, GREEN, 0);  // xRight
-    }
-
 
     ball->x = x + vx;
     ball->y = y + vy;
@@ -166,22 +148,6 @@ void updateWall(Wall* wall, char u, char d) {
     int yTop = y;
     int yBot = y + WALL_HEIGHT;
 
-    /* keyboard
-    if (yBot < VGA_Y_LIM - WALL_MARGIN && yTop > WALL_MARGIN) {
-        switch(leftKey & 0xFF) {
-            case W: y -= WALL_SPEED; break;
-            case A: y += WALL_SPEED; break;
-            default: break;
-        }
-        switch (rightKey & 0xFF) {
-            case D: y -= WALL_SPEED; break;
-            case S: y += WALL_SPEED; break;
-            default: break;
-        }
-    }
-    */
-    
-    //* buttons
     if(d && !u && yBot < VGA_Y_LIM - WALL_MARGIN) {
         y += WALL_SPEED;
     } else if (!d && u && yTop > 0 + WALL_MARGIN) {
