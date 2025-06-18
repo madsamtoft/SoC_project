@@ -21,7 +21,7 @@
 #define PS2_BASE_ADDR    0xf0040000
 
 #define TIMER_TARGET_ADDR 0xf0050000
-#define TIMER_DONE_ADDR    0xf0050004
+#define TIMER_DONE_ADDR   0xf0050004
 
 #define UART_STATUS      0xf0000000
 #define UART_DATA        0xf0000004
@@ -68,7 +68,7 @@ void startTimer(int time) {
 }
 
 void waitTimer() {
-    int count = 0;
+    volatile int count = 0;
     while(*timer_done != 1) {
         count += 1;
     }

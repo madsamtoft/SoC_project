@@ -32,7 +32,7 @@ void moveBall(Ball* ball, char u, char d, char l, char r);
 
 
 int main() {
-    Ball ball = {10, 10, BALL_SPEED, BALL_SPEED};
+    Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
     Ball* ballPtr = &ball;
 
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
@@ -147,6 +147,19 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
     int vx = ball->vx;
     int vy = ball->vy;
 
+    switch (r & l) {
+        case 0b10: vx = 1;
+        case 0b01: vx = -1;
+        default: vx = 0;
+    }
+
+    switch (d & u) {
+        case 0b10: vy = 1;
+        case 0b01: vy = -1;
+        default: vy = 0; 
+    }
+
+    /*
     if(r && !l) {
         vx = 1;
     } else if (!r && l) {
@@ -161,6 +174,8 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
     } else {
         vy = 0;
     }
+    */
+    
 
     ball->x = x + vx;
     ball->y = y + vy;
