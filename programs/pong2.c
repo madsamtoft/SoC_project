@@ -10,6 +10,9 @@
 #define WALL_SPEED 4
 
 #define SCREEN_OFFSET 5 // Offset for the right wall to fit on the screen
+#define FPS 30
+
+//#define DEBUG 0 //uncomment for debug mode
 
 struct pongBall {
     int x;
@@ -57,14 +60,16 @@ int main() {
     // Initialize the screen as black
     drawScreen(BLACK);
 
-    //DEBUG
+    
+    #ifdef DEBUG //DEBUGGING
     for(int i = 0; i < VGA_Y_LIM; i++) {
         setPixel(0, i, RED, 0); // wall Left
         setPixel(VGA_X_LIM - SCREEN_OFFSET, i, GREEN, 0); // wall Right
     }
+    #endif
 
     while(1) {
-        startTimer(1000/30); // 30 FPS
+        startTimer(1000/FPS);
         btns = readButtons();
         btnU = (btns >> 0) & 0b1;
         btnD = (btns >> 2) & 0b1;
@@ -146,13 +151,15 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     ball->vy = vy;
     ball->vx = vx;
 
-    //DEBUGGING
+    
+    #ifdef DEBUG //DEBUGGING
     for (int i = 0; i < VGA_Y_LIM; i++) {
         setPixel(lWall.x+WALL_WIDTH, i, RED, 0); // wall Right
 
         setPixel(x, i, BLUE, 0);        // ball Left
         setPixel(x+BALL_SIZE, i, GREEN, 0);  // ball Right
     }
+    #endif
 }
 
 
