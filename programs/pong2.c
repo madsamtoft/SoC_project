@@ -39,7 +39,7 @@ void printBallInfo(Ball ball);
 int main() {
     Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
-    Wall wallRight = {VGA_X_LIM - WALL_MARGIN - SCREEN_OFFSET, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
+    Wall wallRight = {(VGA_X_LIM - WALL_WIDTH) - WALL_MARGIN - SCREEN_OFFSET, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
 
     volatile char btns = 0;
     char btnU = 0;
