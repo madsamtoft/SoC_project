@@ -110,47 +110,10 @@ int main() {
     return 0;
 }
 
-void fsm(Ball* ball, Wall* wallLeft, Wall* wallRight, char btnU, char btnD, char btnL, char btnR) {
-    switch(readSwitches() & 0b11) {
-        case 0b00:
-            // Move paddles with buttons
-            drawBall(*ball, BLACK);
-            drawWall(*wallLeft, BLACK);
-            drawWall(*wallRight, BLACK);
-
-            updateWall(wallLeft, btnU, btnL);
-            updateWall(wallRight, btnR, btnD);
-            updateBall(ball, *wallLeft, *wallRight);
-
-            drawBall(*ball, WHITE);
-            drawWall(*wallLeft, WHITE);
-            drawWall(*wallRight, WHITE);
-            break;
-        case 0b01:
-            // Move ball with buttons
-            drawBall(*ball, BLACK);
-            drawWall(*wallLeft, BLACK);
-            drawWall(*wallRight, BLACK);
-
-            moveBall(ball, btnU, btnD, btnL, btnR);
-            checkCollision(ball, *wallLeft, *wallRight);
-            checkOutOfBounds(ball);
-
-            drawBall(*ball, WHITE);
-            drawWall(*wallLeft, WHITE);
-            drawWall(*wallRight, WHITE);
-            break;
-        default:
-            // Default case, do nothing
-            break;
-    }
-}
-
 void drawBall(Ball ball, char color) {
     int x = ball.x;
     int y = ball.y;
     
-    // drawCircle(x, y, BALL_RADIUS, WHITE, 0);
     drawSquare(x, y, BALL_SIZE, color, 0);
 }
 
