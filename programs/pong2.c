@@ -37,9 +37,11 @@ int xOutOfBounds(Ball* ball);
 int yOutOfBounds(Ball* ball);
 int touchPaddle(Ball ball, Wall lWall, Wall rWall);
 void drawWall(Wall wall, char color);
-void updateWall(Wall* wall, char u, char d);
+void updateWallButtons(Wall* wall, char u, char d);
+void updateWallKeyboard(Wall* wall, char key);
 void moveBall(Ball* ball, char u, char d, char l, char r);
 void printBallInfo(Ball ball);
+void printKeyboardInfo(char key);
 
 
 int main() {
@@ -77,7 +79,7 @@ int main() {
         btnR = (btns >> 1) & 0b1;
         sw = readSwitches();
 
-        //int key = readPs2();
+        int key = readPs2();
 
         switch(readSwitches() & 0b11) {
             case 0b00:
@@ -86,8 +88,8 @@ int main() {
                 drawWall(wallLeft, BLACK);
                 drawWall(wallRight, BLACK);
 
-                updateWall(&wallLeft, btnU, btnL);
-                updateWall(&wallRight, btnR, btnD);
+                updateWallButtons(&wallLeft, btnU, btnL);
+                updateWallButtons(&wallRight, btnR, btnD);
                 updateBall(&ball, wallLeft, wallRight);
 
                 drawBall(ball, WHITE);
@@ -106,11 +108,26 @@ int main() {
                 drawWall(wallLeft, WHITE);
                 drawWall(wallRight, WHITE);
                 break;
+            case 0b10:
+                // Move paddles with buttons
+                drawBall(ball, BLACK);
+                drawWall(wallLeft, BLACK);
+                drawWall(wallRight, BLACK);
+
+                updateWallKeyboard(&wallLeft, key);
+                updateBall(&ball, wallLeft, wallRight);
+
+                drawBall(ball, WHITE);
+                drawWall(wallLeft, WHITE);
+                drawWall(wallRight, WHITE);
+                break;
             default:
                 // Default case, do nothing
                 break;
         }
-        printBallInfo(ball);
+
+        //printBallInfo(ball);
+        printKeyboardInfo(key);
         waitTimer();
     }
     return 0;
@@ -224,7 +241,22 @@ void drawWall(Wall wall, char color) {
     drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, color, 0);
 }
 
-void updateWall(Wall* wall, char u, char d) {
+void updateWallButtons(Wall* wall, char u, char d) {
+    int y = wall->y;
+    int yTop = y;
+    int yBot = y + WALL_HEIGHT;
+    
+    //* buttons
+    if(d && !u && yBot < VGA_Y_LIM - WALL_MARGIN) {
+        y += WALL_SPEED;
+    } else if (!d && u && yTop > 0 + WALL_MARGIN) {
+        y -= WALL_SPEED;
+    }
+
+    wall->y = y;
+}
+
+void updateWallKeyboard(Wall* wall, char key) {
     int y = wall->y;
     int yTop = y;
     int yBot = y + WALL_HEIGHT;
@@ -243,16 +275,8 @@ void updateWall(Wall* wall, char u, char d) {
         }
     }
     */
-    
-    //* buttons
-    if(d && !u && yBot < VGA_Y_LIM - WALL_MARGIN) {
-        y += WALL_SPEED;
-    } else if (!d && u && yTop > 0 + WALL_MARGIN) {
-        y -= WALL_SPEED;
-    }
-
-    wall->y = y;
 }
+
 
 // Temp
 void moveBall(Ball* ball, char u, char d, char l, char r) {
@@ -305,4 +329,8 @@ void printBallInfo(Ball ball) {
     putCharUart(',');
     printToUart(yString);
     putCharUart('\r');
+}
+
+void printKeyboardInfo(char key) {
+
 }
