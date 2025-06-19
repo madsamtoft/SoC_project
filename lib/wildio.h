@@ -157,8 +157,8 @@ int getCharUart() {
     return *uart_data;
 }
 
-void clearLine() {
-    for(unsigned char i = 1; i != 0; i++) {
+void clearLine(int lim) {
+    for(unsigned int i = 0; i < lim; i++) {
         putCharUart(' ');
     }
     putCharUart('\r');
@@ -171,17 +171,23 @@ char digitToChar(unsigned char digit) {
     return '0' + digit;
 }
 
-void numToString(int num, char* string) {
+void numToString(unsigned int num, char* string) {
     // Convert any number in the range 0-999 to a string
     //
     // num - The number to convert
     // string - pointer to the string's base address
-    int i = num < 0;
-    string[0] = '-';
-    string[i] = digitToChar((num/100) % 10);    // Hundreds
-    string[i+1] = digitToChar((num/10) % 10);     // Tens
-    string[i+2] = digitToChar(num % 10);          // Ones
-    string[i+3] = '\0';
+    // int i = num < 0;
+    // string[0] = '-';
+    if (num > 999) {
+        string[0] = 'X';
+        string[1] = 'X';
+        string[2] = 'X';
+    } else {
+        string[0] = digitToChar((num/100) % 10);    // Hundreds
+        string[1] = digitToChar((num/10) % 10);     // Tens
+        string[2] = digitToChar(num % 10);          // Ones
+    }
+    string[3] = '\0';
 }
 
 // void putCharOnceUart(int value) {

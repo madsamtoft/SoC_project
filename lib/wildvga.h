@@ -68,6 +68,18 @@ void drawScreen(char c) {
     }
 }
 
+void drawHorizontalLine(int y, char c) {
+    for(int i = 0; i < VGA_X_LIM; i++) {
+        setPixel(i, y, c, 0);
+    }
+}
+
+void drawVerticalLine(int x, char c) {
+    for(int i = 0; i < VGA_Y_LIM; i++) {
+        setPixel(x, i, c, 0);
+    }
+}
+
 void drawRectangle(int x, int y, int w, int h, char c, char wrap) {
     // Draws a rectangle with:
     // x - top left x-coordinate

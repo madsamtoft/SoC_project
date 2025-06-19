@@ -1,5 +1,6 @@
 #include "../lib/wildvga.h"
 #include "../lib/wildio.h"
+#include <stdint.h>
 
 #define BALL_SIZE 6
 #define BALL_SPEED 1
@@ -9,36 +10,35 @@
 #define WALL_MARGIN 2
 #define WALL_SPEED 4
 
+#define FPS 30
+
 struct pongBall {
-    int x;
-    int y;
-    int vx;
-    int vy;
+    int16_t x;
+    int16_t y;
+    int8_t vx;
+    int8_t vy;
 };
 typedef struct pongBall Ball;
 
 struct pongWall {
-    int x;
-    int y;
+    int16_t x;
+    int16_t y;
 };
 typedef struct pongWall Wall;
 
 
-void drawBall(Ball ball);
-void updateBall(Ball* ball, Wall lWall);
-void drawWall(Wall wall);
+void drawBall(Ball* ball, char color);
+void updateBall(Ball* ball);
+void drawWall(Wall* wall, char color);
 void updateWall(Wall* wall, char u, char d);
 void moveBall(Ball* ball, char u, char d, char l, char r);
+void printBallInfo(Ball* ball);
 
 
 int main() {
     Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
-    Ball* ballPtr = &ball;
-
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
-    Wall* wallLeftPtr = &wallLeft;
-    Wall wallRight = {VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
-    Wall* wallRightPtr = &wallRight;
+    Wall wallRight = {VGA_X_LIM - WALL_WIDTH - WALL_MARGIN, WALL_MARGIN};
 
     volatile char btns = 0;
     char btnU = 0;
@@ -47,7 +47,14 @@ int main() {
     char btnR = 0;
     volatile char sw = 0;
 
+    drawScreen(BLACK);
+
     while(1) {
+        startTimer(1000/FPS);
+    
+        // clearLine(20);
+        // printBallInfo(&ball);
+        
         btns = readButtons();
         btnU = (btns >> 0) & 0b1;
         btnD = (btns >> 2) & 0b1;
@@ -55,62 +62,73 @@ int main() {
         btnR = (btns >> 1) & 0b1;
         sw = readSwitches();
 
-        updateBall(ballPtr, wallLeft);
-        updateWall(wallLeftPtr, btnU, btnL);
-        updateWall(wallRightPtr, btnR, btnD);
+        // Draw old positions black
+        drawBall(&ball, BLACK);
+        drawWall(&wallLeft, BLACK);
+        drawWall(&wallRight, BLACK);
+
+        // Update all the pieces
+        updateBall(&ball);
+        updateWall(&wallLeft, btnU, btnL);
+        updateWall(&wallRight, btnR, btnD);
         
-        drawScreen(sw & 0b111111);
-        drawBall(ball);
-        drawWall(wallLeft);
-        drawWall(wallRight);
-        
-        wait(600000);
+        // Draw the pieces white
+        drawBall(&ball, WHITE);
+        drawWall(&wallLeft, WHITE);
+        drawWall(&wallRight, WHITE);
+
+        waitTimer();
     }
 
     return 0;
 }
 
-void drawBall(Ball ball) {
-    int x = ball.x;
-    int y = ball.y;
+void drawBall(Ball* ball, char color) {
+    int x = ball->x;
+    int y = ball->y;
 
-    // drawCircle(x, y, BALL_RADIUS, WHITE, 0);
-    drawSquare(x, y, BALL_SIZE, WHITE, 0);
+    drawSquare(x, y, BALL_SIZE, color, 0);
 }
 
-void updateBall(Ball* ball, Wall lWall) {
-    int x = ball->x;
-    int xLeft = x;
-    int xRight = x + BALL_SIZE;
-    
-    int y = ball->y;
-    int yTop = y;
-    int yBot = y + BALL_SIZE;
+void updateBall(Ball* ball) {
+    int16_t x = ball->x;
+    int16_t xLeft = x;
+    int16_t xRight = x + BALL_SIZE;
 
-    int vx = ball->vx;
-    int vy = ball->vy;
+    int16_t y = ball->y;
+    int16_t yTop = y;
+    int16_t yBot = y + BALL_SIZE;
 
-    int lWall_xRight = lWall.x + WALL_WIDTH;
-    int lWall_yTop = lWall.y;
-    int lWall_yBot = lWall.y + WALL_HEIGHT;
+    int8_t vx = ball->vx;
+    int8_t vy = ball->vy;
+
+    // int16_t lWall_xRight = lWall->x + WALL_WIDTH;
+    // int16_t lWall_yTop = lWall->y;
+    // int16_t lWall_yBot = lWall->y + WALL_HEIGHT;
     
     // int rWall_xLeft = rWall.x + WALL_WIDTH;
     // int rWall_yTop = rWall.y;
     // int rWall_yBot = rWall.y + WALL_HEIGHT;
-
-
-    if(xRight >= VGA_X_LIM || xLeft <= 0) {
-        vx *= -1;
-    }
     
-    if(xLeft <= lWall_xRight && yBot >= lWall_yTop && yTop <= lWall_yBot) {
-        vx = 1;
-    }
+    // if(xLeft <= lWall_xRight && yBot >= lWall_yTop && yTop <= lWall_yBot) {
+    //     vx = 1;
+    // }
     // if(xRight >= rWall_xLeft && yBot >= rWall_yTop && yTop <= rWall_yBot) {
     //     vx = -1;
     // }
-    if(yBot >= VGA_Y_LIM || yTop <= 0) {
-        vy *= -1;
+
+    if(xRight >= VGA_X_LIM) {
+        vx = -BALL_SPEED;
+    }
+    if(xLeft <= 0) {
+        vx = BALL_SPEED;
+    }
+    
+    if(yBot >= VGA_Y_LIM) {
+        vy = -BALL_SPEED;
+    }
+    if(yTop <= 0) {
+        vy = BALL_SPEED;
     }
 
     ball->x = x + vx;
@@ -119,11 +137,11 @@ void updateBall(Ball* ball, Wall lWall) {
     ball->vy = vy;
 }
 
-void drawWall(Wall wall) {
-    int x = wall.x;
-    int y = wall.y;
+void drawWall(Wall* wall, char color) {
+    int x = wall->x;
+    int y = wall->y;
 
-    drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, WHITE, 0);
+    drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, color, 0);
 }
 
 void updateWall(Wall* wall, char u, char d) {
@@ -140,45 +158,17 @@ void updateWall(Wall* wall, char u, char d) {
     wall->y = y;
 }
 
-// Temp
-void moveBall(Ball* ball, char u, char d, char l, char r) {
+void printBallInfo(Ball* ball) {
     int x = ball->x;
-    int y = ball->y;
-    int vx = ball->vx;
-    int vy = ball->vy;
-
-    switch (r & l) {
-        case 0b10: vx = 1;
-        case 0b01: vx = -1;
-        default: vx = 0;
-    }
-
-    switch (d & u) {
-        case 0b10: vy = 1;
-        case 0b01: vy = -1;
-        default: vy = 0; 
-    }
-
-    /*
-    if(r && !l) {
-        vx = 1;
-    } else if (!r && l) {
-        vx = -1;
-    } else {
-        vx = 0;
-    }
-    if(d && !u) {
-        vy = 1;
-    } else if (!d && u) {
-        vy = -1;
-    } else {
-        vy = 0;
-    }
-    */
+    char xString[5] = "";
+    numToString(x, xString);
     
+    int y = ball->y;
+    char yString[5] = "";
+    numToString(y, yString);
 
-    ball->x = x + vx;
-    ball->y = y + vy;
-    ball->vx = vx;
-    ball->vy = vy;
+    printToUart(xString);
+    putCharUart(',');
+    printToUart(yString);
+    putCharUart('\r');
 }
