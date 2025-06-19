@@ -29,8 +29,10 @@ typedef struct pongWall Wall;
 void drawBall(Ball ball, char color);
 void updateBall(Ball* ball, Wall lWall, Wall rWall);
 void respawnBall(Ball* ball, int vx, int vy);
-int isXOutOfBounds(Ball* ball);
-int isYOutOfBounds(Ball* ball);
+
+int xOutOfBounds(Ball* ball);
+int yOutOfBounds(Ball* ball);
+int touchPaddle(Ball ball, Wall lWall, Wall rWall);
 void drawWall(Wall wall, char color);
 void updateWall(Wall* wall, char u, char d);
 void moveBall(Ball* ball, char u, char d, char l, char r);
@@ -122,36 +124,18 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     int vy = ball->vy;
     int vx = ball->vx;
 
-    int xLeft = x;
-    int xRight = x + BALL_SIZE;
-    int yTop = y;
-    int yBot = y + BALL_SIZE;
-
-    int lWall_xRight = lWall.x + WALL_WIDTH;
-    int lWall_yTop = lWall.y;
-    int lWall_yBot = lWall.y + WALL_HEIGHT;
-
-    int rWall_xLeft = rWall.x;
-    int rWall_yTop = rWall.y;
-    int rWall_yBot = rWall.y + WALL_HEIGHT;
-
     // Paddle collision — must come before wall collision
-    /*
-    if(x <= lWall_xRight && y <= lWall_yBot && y >= lWall_yTop && vx < 0) {
-        vx *= -1;
+    if(touchPaddle(*ball, lWall, rWall)) {
+        vx *= -1; // Reverse direction
     }
-    else if(xRight >= rWall_xLeft && y <= rWall_yBot && y >= rWall_yTop && vx > 0) {
-        vx *= -1;
-    }
-    */
 
     // Top/bottom screen bounce
-    if (isYOutOfBounds(ball)) {
+    if (yOutOfBounds(ball)) {
         vy *= -1;
     }
 
     // Left or right screen edge bounce
-    if (isXOutOfBounds(ball)) {
+    if (xOutOfBounds(ball)) {
         x = VGA_X_LIM/2;
         y = VGA_Y_LIM/2;
         vx *= -1;
@@ -164,10 +148,10 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
 
     //DEBUGGING
     for (int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(lWall_xRight, i, RED, 0); // wall Right
+        setPixel(lWall.x+WALL_WIDTH, i, RED, 0); // wall Right
 
         setPixel(x, i, BLUE, 0);        // ball Left
-        setPixel(xRight, i, GREEN, 0);  // ball Right
+        setPixel(x+BALL_SIZE, i, GREEN, 0);  // ball Right
     }
 }
 
@@ -180,7 +164,7 @@ void respawnBall(Ball* ball, int vx, int vy) {
 }
 
 
-int isXOutOfBounds(Ball* ball) {
+int xOutOfBounds(Ball* ball) {
     int x = ball->x;
     int y = ball->y;
 
@@ -188,12 +172,38 @@ int isXOutOfBounds(Ball* ball) {
     return (x < 0 || x >= VGA_X_LIM-BALL_SIZE-SCREEN_OFFSET) ? 1 : 0;
 }
 
-int isYOutOfBounds(Ball* ball) {
+int yOutOfBounds(Ball* ball) {
     int x = ball->x;
     int y = ball->y;
 
     // Check if the ball is out of y-bounds
-    return (y < 0 || y >= VGA_Y_LIM-BALL_SIZE) ? 1 : 0; //(y < 0 && vy < 0) || (y >= VGA_Y_LIM - BALL_SIZE && vy > 0)
+    return (y < 0 || y > VGA_Y_LIM-BALL_SIZE) ? 1 : 0; //(y < 0 && vy < 0) || (y >= VGA_Y_LIM - BALL_SIZE && vy > 0)
+}
+
+int touchPaddle(Ball ball, Wall lWall, Wall rWall) {
+    int x = ball.x;
+    int xRight = x + BALL_SIZE;
+    int y = ball.y;
+    int yTop = y;
+    int yBot = y + BALL_SIZE;
+
+    // Left paddle coordinates
+    int lWall_xRight = lWall.x + WALL_WIDTH;
+    int lWall_yTop = lWall.y;
+    int lWall_yBot = lWall.y + WALL_HEIGHT;
+
+    // Right paddle coordinates
+    int rWall_xLeft = rWall.x;
+    int rWall_yTop = rWall.y;
+    int rWall_yBot = rWall.y + WALL_HEIGHT;
+
+    // Check if the ball is touching any paddle
+    if (x <= lWall_xRight && yBot >= lWall_yTop && yTop <= lWall_yBot) {
+        return 1; // Touching left paddle
+    } else if (xRight >= rWall_xLeft && yBot >= rWall_yTop && yTop <= rWall_yBot) {
+        return 1; // Touching right paddle
+    }
+    return 0; // Not touching any paddle
 }
 
 void drawWall(Wall wall, char color) {
@@ -256,11 +266,11 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
         vy = 0;
     }
 
-    if (isYOutOfBounds(ball)) {
+    if (yOutOfBounds(ball)) {
         vy *= 0;
     }
 
-    if (isXOutOfBounds(ball)) {
+    if (xOutOfBounds(ball)) {
         respawnBall(ball, vx, vy);
         return; // Do not update position if out of bounds
     }
@@ -273,11 +283,11 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
 
 void printBallInfo(Ball ball) {
     int x = ball.x;
-    char xString[5] = {0};
+    char xString[5] = "";
     numToString(x, xString);
     
     int y = ball.y;
-    char yString[5] = {0};
+    char yString[5] = "";
     numToString(y, yString);
 
     printToUart(xString);
