@@ -29,7 +29,8 @@ typedef struct pongWall Wall;
 void drawBall(Ball ball, char color);
 void updateBall(Ball* ball, Wall lWall, Wall rWall);
 void respawnBall(Ball* ball, int vx, int vy);
-void checkOutOfBounds(Ball* ball);
+int isXOutOfBounds(Ball* ball);
+int isYOutOfBounds(Ball* ball);
 void drawWall(Wall wall, char color);
 void updateWall(Wall* wall, char u, char d);
 void moveBall(Ball* ball, char u, char d, char l, char r);
@@ -37,7 +38,7 @@ void printBallInfo(Ball ball);
 
 
 int main() {
-    int wallRightYPos = VGA_X_LIM - WALL_WIDTH - WALL_MARGIN - SCREEN_OFFSET;
+    int wallRightYPos = VGA_X_LIM - WALL_WIDTH - WALL_MARGIN - SCREEN_OFFSET + 1;
 
     Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
@@ -93,7 +94,6 @@ int main() {
                 drawWall(wallRight, BLACK);
 
                 moveBall(&ball, btnU, btnD, btnL, btnR);
-                checkOutOfBounds(&ball);
 
                 drawBall(ball, WHITE);
                 drawWall(wallLeft, WHITE);
@@ -103,7 +103,7 @@ int main() {
                 // Default case, do nothing
                 break;
         }
-        //printBallInfo(ball);
+        printBallInfo(ball);
         waitTimer();
     }
     return 0;
@@ -146,12 +146,12 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     */
 
     // Top/bottom screen bounce
-    if ((yTop <= 0 && vy < 0) || (yBot >= VGA_Y_LIM && vy > 0)) {
+    if (isYOutOfBounds(ball)) {
         vy *= -1;
     }
 
     // Left or right screen edge bounce
-    if (xRight >= VGA_X_LIM - SCREEN_OFFSET || xLeft <= 2) {
+    if (isXOutOfBounds(ball)) {
         x = VGA_X_LIM/2;
         y = VGA_Y_LIM/2;
         vx *= -1;
@@ -180,17 +180,20 @@ void respawnBall(Ball* ball, int vx, int vy) {
 }
 
 
-void checkOutOfBounds(Ball* ball) {
+int isXOutOfBounds(Ball* ball) {
     int x = ball->x;
     int y = ball->y;
 
-    // Check if the ball is out of bounds
-    if (x < -BALL_SIZE || x >= VGA_X_LIM+BALL_SIZE || y < 0-BALL_SIZE || y >= VGA_Y_LIM+BALL_SIZE) {
-        x = VGA_X_LIM/2;
-        y = VGA_Y_LIM/2;
-        ball->x = x;
-        ball->y = y;
-    }
+    // Check if the ball is out of x-bounds
+    return (x < 0 || x >= VGA_X_LIM-BALL_SIZE-SCREEN_OFFSET) ? 1 : 0;
+}
+
+int isYOutOfBounds(Ball* ball) {
+    int x = ball->x;
+    int y = ball->y;
+
+    // Check if the ball is out of y-bounds
+    return (y < 0 || y >= VGA_Y_LIM-BALL_SIZE) ? 1 : 0; //(y < 0 && vy < 0) || (y >= VGA_Y_LIM - BALL_SIZE && vy > 0)
 }
 
 void drawWall(Wall wall, char color) {
@@ -253,8 +256,13 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
         vy = 0;
     }
 
-    if ((y <= 0 && vy < 0) || (y+BALL_SIZE >= VGA_Y_LIM && vy > 0)) {
+    if (isYOutOfBounds(ball)) {
         vy *= 0;
+    }
+
+    if (isXOutOfBounds(ball)) {
+        respawnBall(ball, vx, vy);
+        return; // Do not update position if out of bounds
     }
 
     ball->x = x + vx;
