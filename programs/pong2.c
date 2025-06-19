@@ -9,6 +9,8 @@
 #define WALL_MARGIN 2
 #define WALL_SPEED 4
 
+#define SCREEN_OFFSET 4 // Offset for the right wall to fit on the screen
+
 struct pongBall {
     int x;
     int y;
@@ -38,7 +40,7 @@ void moveBall(Ball* ball, char u, char d, char l, char r);
 int main() {
     Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
-    Wall wallRight = {VGA_X_LIM - 2*WALL_MARGIN - 2*WALL_WIDTH, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
+    Wall wallRight = {VGA_X_LIM - WALL_MARGIN - SCREEN_OFFSET, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
 
     volatile char btns = 0;
     char btnU = 0;
@@ -52,8 +54,8 @@ int main() {
     drawScreen(BLACK);
 
     //temp
-    setPixel(1, 1, RED, 0);
-    setPixel(VGA_X_LIM-1, VGA_Y_LIM-1, GREEN, 0);
+    setPixel(0, 0, RED, 0);
+    setPixel(VGA_X_LIM-5, VGA_Y_LIM-5, GREEN, 0);
 
     while(1) {
         startTimer(1000/30);
@@ -198,7 +200,7 @@ void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
     }
 
     // Left or right screen edge bounce
-    if (xRight >= VGA_X_LIM - 4) { // -4 only for my shitty screen
+    if (xRight >= VGA_X_LIM - SCREEN_OFFSET) { // -4 only for my shitty screen
         ball->x = VGA_X_LIM/2;
         ball->y = VGA_Y_LIM/2;
         ball->vx = -1*BALL_SPEED;
