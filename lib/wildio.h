@@ -135,14 +135,35 @@ int readPs2(void) {
     return ps2_state;
 }
 
-int setUart(char value) {
+void putCharUart(unsigned char value) {
+    // Wait for the UART tx bit to show that transmitting is ready,
+    // and then put the data onto it
+    //
+    // value - the 8 bit character to put
+    unsigned char tx_ready;
+    do {
+        tx_ready = *uart_status & 0b1;
+    } while (!tx_ready);
     *uart_data = value;
+}
+
+unsigned char getCharUart() {
+    // Wait for the UART rx bit to show that recieving is ready,
+    // and then return the data
+    unsigned char rx_ready;
+    do {
+        rx_ready = (*uart_status >> 1) & 0b1;
+    } while (!rx_ready);
     return *uart_data;
 }
 
-int uartReady(void) {
-    uart_status_state = *uart_status;
-    return uart_status_state;
+void printToUart(unsigned char string[]) {
+    // Print the given string to the UART output
+    //
+    // string - the char array to be printed
+    for(int i = 0; string[i] != '\0'; i++) {
+        putCharUart(string[i]);
+    }
 }
 
 #endif
