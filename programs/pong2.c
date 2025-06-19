@@ -152,19 +152,10 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     }
 
     // Left or right screen edge bounce
-    if (xRight >= VGA_X_LIM - SCREEN_OFFSET) { // -4 only for my shitty screen
-        ball->x = VGA_X_LIM/2;
-        ball->y = VGA_Y_LIM/2;
-        ball->vx = -1*BALL_SPEED;
-        ball->vy = vy;
-        return;
-    }
-    else if (xLeft <= 2) { // 2 set for debugging purposes
-        ball->x = VGA_X_LIM/2;
-        ball->y = VGA_Y_LIM/2;
-        ball->vx = 1*BALL_SPEED;
-        ball->vy = vy;
-        return;
+    if (xRight >= VGA_X_LIM - SCREEN_OFFSET || xLeft <= 2) {
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        vx *= -1;
     }
 
     ball->x = x + vx;
