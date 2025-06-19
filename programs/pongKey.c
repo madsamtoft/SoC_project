@@ -36,7 +36,8 @@ int xOutOfBounds(Ball* ball);
 int yOutOfBounds(Ball* ball);
 int touchPaddle(Ball ball, Wall lWall, Wall rWall);
 
-void printKeyboardInfo(char key);
+//void printKeyboardInfo(char key);
+void printBallInfo(Ball ball);
 
 int main() {
     int wallRightYPos = VGA_X_LIM - WALL_WIDTH - WALL_MARGIN - SCREEN_OFFSET + 1;
@@ -73,7 +74,8 @@ int main() {
         updateBall(&ball, wallLeft, wallRight);
 
         // Print keyboard press to UART
-        printKeyboardInfo(key);
+        //printKeyboardInfo(key);
+        printBallInfo(ball);
 
         // Draw Updated Positions
         drawBall(ball, WHITE);
@@ -136,16 +138,16 @@ void updateWalls(Wall* lWall, Wall* rWall, char key) {
     int rWall_yBot = rWall_y + WALL_HEIGHT;
     
     // Left Wall
-    if ((lWall_y > 0 + WALL_MARGIN) && ((key && 0xFF) == W)) { 
+    if ((lWall_y > 0 + WALL_MARGIN) && ((key & 0xFF) == W)) { 
         lWall_y -= WALL_SPEED;
-    } else if ((lWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key && 0xFF) == S)) {
+    } else if ((lWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key & 0xFF) == S)) {
         lWall_y += WALL_SPEED;
     }
 
     // Right Wall
-    if ((rWall_y > 0 + WALL_MARGIN) && ((key && 0xFF) == I)) { 
+    if ((rWall_y > 0 + WALL_MARGIN) && ((key & 0xFF) == I)) { 
         rWall_y -= WALL_SPEED;
-    } else if ((rWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key && 0xFF) == K)) {
+    } else if ((rWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key & 0xFF) == K)) {
         rWall_y += WALL_SPEED;
     }
 
@@ -200,6 +202,22 @@ int touchPaddle(Ball ball, Wall lWall, Wall rWall) {
     return 0; // Not touching any paddle
 }
 
+void printBallInfo(Ball ball) {
+    int x = ball.x;
+    char xString[5] = "";
+    numToString(x, xString);
+    
+    int y = ball.y;
+    char yString[5] = "";
+    numToString(y, yString);
+
+    printToUart(xString);
+    putCharUart(',');
+    printToUart(yString);
+    putCharUart('\r');
+}
+
+/*
 void printKeyboardInfo(char key) {
     char outString[2] = "";
 
@@ -237,19 +255,4 @@ void printKeyboardInfo(char key) {
     printToUart(outString);
 }
 
-/*
-void printBallInfo(Ball ball) {
-    int x = ball.x;
-    char xString[5] = "";
-    numToString(x, xString);
-    
-    int y = ball.y;
-    char yString[5] = "";
-    numToString(y, yString);
-
-    printToUart(xString);
-    putCharUart(',');
-    printToUart(yString);
-    putCharUart('\r');
-}
 */

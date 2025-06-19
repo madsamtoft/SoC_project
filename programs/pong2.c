@@ -36,14 +36,12 @@ void respawnBall(Ball* ball, int vx, int vy);
 
 void drawWall(Wall wall, char color);
 void updateWallButtons(Wall* wall, char u, char d);
-void updateWallKeyboard(Wall* lWall, Wall* rWall, char key);
 
 int xOutOfBounds(Ball* ball);
 int yOutOfBounds(Ball* ball);
 int touchPaddle(Ball ball, Wall lWall, Wall rWall);
 
 void printBallInfo(Ball ball);
-void printKeyboardInfo(char key);
 
 
 int main() {
@@ -122,33 +120,10 @@ int main() {
                 drawWall(wallRight, WHITE);
                 break;
 
-            case 0b10: // Move paddles with keyboard
-                // Read Keyboard Input
-                key = readPs2();
-                
-                // Overwrite last frame
-                drawBall(ball, BLACK);
-                drawWall(wallLeft, BLACK);
-                drawWall(wallRight, BLACK);
-
-                // Update Sprites
-                updateWallKeyboard(&wallLeft, &wallRight, key);
-                updateBall(&ball, wallLeft, wallRight);
-
-                // Print keyboard press to UART
-                printKeyboardInfo(key);
-
-                // Draw Updated Positions
-                drawBall(ball, WHITE);
-                drawWall(wallLeft, WHITE);
-                drawWall(wallRight, WHITE);
-                break;
-
             default:
                 // Default case, do nothing
                 break;
         }
-        
         waitTimer();
     }
     return 0;
@@ -266,28 +241,6 @@ void updateWallButtons(Wall* wall, char u, char d) {
     wall->y = y;
 }
 
-void updateWallKeyboard(Wall* lWall, Wall* rWall, char key) {
-    int lWall_y = lWall->y;
-    int lWall_yBot = lWall_y + WALL_HEIGHT;
-
-    int rWall_y = rWall->y;
-    int rWall_yBot = rWall_y + WALL_HEIGHT;
-    
-    // Left Wall
-    if ((lWall_y > 0 + WALL_MARGIN) && ((key && 0xFF) == W)) { 
-        lWall_y -= WALL_SPEED;
-    } else if ((lWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key && 0xFF) == S)) {
-        lWall_y += WALL_SPEED;
-    }
-
-    // Right Wall
-    if ((rWall_y > 0 + WALL_MARGIN) && ((key && 0xFF) == I)) { 
-        rWall_y -= WALL_SPEED;
-    } else if ((rWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key && 0xFF) == K)) {
-        rWall_y += WALL_SPEED;
-    }
-}
-
 int xOutOfBounds(Ball* ball) {
     int x = ball->x;
     int y = ball->y;
@@ -348,41 +301,4 @@ void printBallInfo(Ball ball) {
     putCharUart(',');
     printToUart(yString);
     putCharUart('\r');
-}
-
-void printKeyboardInfo(char key) {
-    char outString[2] = "";
-
-    switch (key & 0xFF) {    // Always mask to ensure 8-bit comparison
-        case W:
-            outString[0] = 'W';
-            break;
-        case A:
-            outString[0] = 'A';
-            break;
-        case S:
-            outString[0] = 'S';
-            break;
-        case D:
-            outString[0] = 'D';
-            break;
-        case I:
-            outString[0] = 'I';
-            break;
-        case J:
-            outString[0] = 'J';
-            break;
-        case K:
-            outString[0] = 'K';
-            break;
-        case L:
-            outString[0] = 'L';
-            break;
-        default:
-            outString[0] = '0';
-            break;
-    }
-
-    outString[1] = '\r';
-    printToUart(outString);
 }
