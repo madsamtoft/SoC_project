@@ -24,8 +24,11 @@ struct pongWall {
 typedef struct pongWall Wall;
 
 
+void fsm(Ball* ball, Wall* wallLeft, Wall* wallRight, char btnU, char btnD, char btnL, char btnR);
 void drawBall(Ball ball, char color);
-void updateBall(Ball* ball, Wall lWall);
+void updateBall(Ball* ball, Wall lWall, Wall rWall);
+void checkCollision(Ball* ball, Wall lWall, Wall rWall);
+void checkOutOfBounds(Ball* ball);
 void drawWall(Wall wall, char color);
 void updateWall(Wall* wall, char u, char d);
 void moveBall(Ball* ball, char u, char d, char l, char r);
@@ -33,12 +36,8 @@ void moveBall(Ball* ball, char u, char d, char l, char r);
 
 int main() {
     Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
-    Ball* ballPtr = &ball;
-
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
-    Wall* wallLeftPtr = &wallLeft;
-    Wall wallRight = {VGA_X_LIM - 2*WALL_MARGIN - 2*WALL_WIDTH, WALL_MARGIN};  //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
-    Wall* wallRightPtr = &wallRight;
+    Wall wallRight = {VGA_X_LIM - 2*WALL_MARGIN - 2*WALL_WIDTH, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
 
     volatile char btns = 0;
     char btnU = 0;
@@ -48,36 +47,25 @@ int main() {
     volatile char sw = 0;
 
 
+    // Initialize the screen as black
+    drawScreen(BLACK);
+
     //temp
     setPixel(1, 1, RED, 0);
     setPixel(VGA_X_LIM-1, VGA_Y_LIM-1, GREEN, 0);
 
     while(1) {
         startTimer(1000/30);
-        /*
         btns = readButtons();
         btnU = (btns >> 0) & 0b1;
         btnD = (btns >> 2) & 0b1;
         btnL = (btns >> 3) & 0b1;
         btnR = (btns >> 1) & 0b1;
         sw = readSwitches();
-        */
 
-        int key = readPs2();
-        
+        //int key = readPs2();
 
-        drawBall(ball, BLACK);
-        drawWall(wallLeft, BLACK);
-        drawWall(wallRight, BLACK);
-
-        updateBall(ballPtr, wallLeft);
-        updateWall(wallLeftPtr, key, 0);
-        updateWall(wallRightPtr, 0, key);
-        
-        //drawScreen(sw & 0b111111);
-        drawBall(ball, WHITE);
-        drawWall(wallLeft, WHITE);
-        drawWall(wallRight, WHITE);
+        fsm(&ball, &wallLeft, &wallRight, btnU, btnD, btnL, btnR);
         
         waitTimer();
     }
@@ -85,30 +73,71 @@ int main() {
     return 0;
 }
 
+void fsm(Ball* ball, Wall* wallLeft, Wall* wallRight, char btnU, char btnD, char btnL, char btnR) {
+    switch(readSwitches() & 0b11) {
+        case 0b00:
+            // Move paddles with buttons
+            drawBall(*ball, BLACK);
+            drawWall(*wallLeft, BLACK);
+            drawWall(*wallRight, BLACK);
+
+            updateWall(&wallLeft, btnU, btnL);
+            updateWall(&wallRight, btnR, btnD);
+            updateBall(&ball, *wallLeft, *wallRight);
+
+            drawBall(*ball, WHITE);
+            drawWall(*wallLeft, WHITE);
+            drawWall(*wallRight, WHITE);
+            break;
+        case 0b01:
+            // Move ball with buttons
+            drawBall(*ball, BLACK);
+            drawWall(*wallLeft, BLACK);
+            drawWall(*wallRight, BLACK);
+
+            moveBall(&ball, btnU, btnD, btnL, btnR);
+            checkCollision(&ball, *wallLeft, *wallRight);
+            checkOutOfBounds(&ball);
+
+            drawBall(*ball, WHITE);
+            drawWall(*wallLeft, WHITE);
+            drawWall(*wallRight, WHITE);
+            break;
+        default:
+            // Default case, do nothing
+            break;
+    }
+}
+
 void drawBall(Ball ball, char color) {
     int x = ball.x;
     int y = ball.y;
-
-    //DEBUGGING¨
-    if (color == WHITE) {
-        for (int i = 0; i < VGA_Y_LIM; i++) {
-            setPixel(x, i, BLUE, 0);               // xLeft
-            setPixel(x + BALL_SIZE, i, GREEN, 0);  // xRight
-        }
-    } else {
-        for (int i = 0; i < VGA_Y_LIM; i++) {
-            setPixel(x, i, BLACK, 0);               // xLeft
-            setPixel(x + BALL_SIZE, i, BLACK, 0);  // xRight
-        }
-    }
-
+    
     // drawCircle(x, y, BALL_RADIUS, WHITE, 0);
     drawSquare(x, y, BALL_SIZE, color, 0);
-
-    
 }
 
-void updateBall(Ball* ball, Wall lWall) {
+void updateBall(Ball* ball, Wall lWall, Wall rWall) {
+    // Check ball collisions
+    checkCollision(ball, lWall, rWall);
+
+    // Get the current position and velocity of the ball
+    int x = ball->x;
+    int y = ball->y;
+    int vx = ball->vx;
+    int vy = ball->vy;
+
+    // Update the ball's position
+    ball->x = x + vx;
+    ball->y = y + vy;
+    ball->vx = vx;
+    ball->vy = vy;
+
+    // Check if the ball is out of bounds
+    checkOutOfBounds(ball);
+}
+
+void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
     int x = ball->x;
     int y = ball->y;
     int vx = ball->vx;
@@ -123,44 +152,61 @@ void updateBall(Ball* ball, Wall lWall) {
     int lWall_yTop = lWall.y;
     int lWall_yBot = lWall.y + WALL_HEIGHT;
 
+    int rWall_xLeft = rWall.x;
+    int rWall_yTop = rWall.y;
+    int rWall_yBot = rWall.y + WALL_HEIGHT;
+
     // Paddle collision — must come before wall collision
-    /* CHAT
-    if (xLeft <= lWall_xRight &&
-        xRight >= lWall.x &&
-        yBot >= lWall_yTop &&
-        yTop <= lWall_yBot &&
-        vx < 0) {
+    if(x <= lWall_xRight && y <= lWall_yBot && y >= lWall_yTop && vx < 0) {
         vx *= -1;
     }
-    */
-    
-    if(xLeft <= lWall_xRight & yTop <= lWall_yBot & yBot >= lWall_yTop & vx < 0) {
+    else if(xRight >= rWall_xLeft && y <= rWall_yBot && y >= rWall_yTop && vx > 0) {
         vx *= -1;
     }
     
 
     // Left or right screen edge bounce
-    else if (xLeft <= 0 || xRight >= VGA_X_LIM - 4) { // -4 only for my shitty screen
-        vx *= -1;
+    if (xRight >= VGA_X_LIM - 4 && vx > 0) { // -4 only for my shitty screen
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        vx = -1; // TEMP
+    }
+    else if (xLeft <= 2 && vx < 0) { // 2 set for debugging purposes
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        vx = 1; // TEMP
     }
 
+
     // Top/bottom screen bounce
-    else if (yTop <= 0 || yBot >= VGA_Y_LIM) {
+    if (yTop <= 0 && vy < 0) {
+        vy *= -1;
+    }
+    else if (yBot >= VGA_Y_LIM && vy > 0) {
         vy *= -1;
     }
 
     //DEBUGGING
     for (int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(lWall_xRight, i, RED, 0);
+        setPixel(lWall_xRight, i, RED, 0); // wall Right
+
+        setPixel(x, i, BLUE, 0);        // ball Left
+        setPixel(xRight, i, GREEN, 0);  // ball Right
     }
-
-
-    ball->x = x + vx;
-    ball->y = y + vy;
-    ball->vx = vx;
-    ball->vy = vy;
 }
 
+void checkOutOfBounds(Ball* ball) {
+    int x = ball->x;
+    int y = ball->y;
+
+    // Check if the ball is out of bounds
+    if (x < 0 || x >= VGA_X_LIM || y < 0 || y >= VGA_Y_LIM) {
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        ball->x = x;
+        ball->y = y;
+    }
+}
 
 void drawWall(Wall wall, char color) {
     int x = wall.x;
@@ -169,11 +215,12 @@ void drawWall(Wall wall, char color) {
     drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, color, 0);
 }
 
-void updateWall(Wall* wall, char leftKey, char rightKey) {
+void updateWall(Wall* wall, char u, char d) {
     int y = wall->y;
     int yTop = y;
     int yBot = y + WALL_HEIGHT;
 
+    /* keyboard
     if (yBot < VGA_Y_LIM - WALL_MARGIN && yTop > WALL_MARGIN) {
         switch(leftKey & 0xFF) {
             case W: y -= WALL_SPEED; break;
@@ -186,19 +233,14 @@ void updateWall(Wall* wall, char leftKey, char rightKey) {
             default: break;
         }
     }
-
+    */
     
-    
-
-
-    /* buttons
+    //* buttons
     if(d && !u && yBot < VGA_Y_LIM - WALL_MARGIN) {
         y += WALL_SPEED;
     } else if (!d && u && yTop > 0 + WALL_MARGIN) {
         y -= WALL_SPEED;
     }
-    */
-    
 
     wall->y = y;
 }
@@ -210,16 +252,20 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
     int vx = ball->vx;
     int vy = ball->vy;
 
-    switch (r & l) {
-        case 0b10: vx = 1;
-        case 0b01: vx = -1;
-        default: vx = 0;
+    if(r && !l) {
+        vx = 1;
+    } else if (!r && l) {
+        vx = -1;
+    } else {
+        vx = 0;
     }
 
-    switch (d & u) {
-        case 0b10: vy = 1;
-        case 0b01: vy = -1;
-        default: vy = 0; 
+    if(d && !u) {
+        vy = 1;
+    } else if (!d && u) {
+        vy = -1;
+    } else {
+        vy = 0;
     }
 
     ball->x = x + vx;
