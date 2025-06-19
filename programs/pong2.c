@@ -33,6 +33,7 @@ void checkOutOfBounds(Ball* ball);
 void drawWall(Wall wall, char color);
 void updateWall(Wall* wall, char u, char d);
 void moveBall(Ball* ball, char u, char d, char l, char r);
+void printBallInfo(Ball ball);
 
 
 int main() {
@@ -99,7 +100,7 @@ int main() {
                 // Default case, do nothing
                 break;
         }
-        
+        printBallInfo(ball);
         waitTimer();
     }
 
@@ -310,4 +311,19 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
     ball->y = y + vy;
     ball->vx = vx;
     ball->vy = vy;
+}
+
+void printBallInfo(Ball ball) {
+    int x = ball.x;
+    char xString[] = "xxx";
+    numToString(x, xString);
+    
+    int y = ball.y;
+    char yString[] = "xxx";
+    numToString(y, yString);
+
+    printToUart(xString);
+    putCharUart(',');
+    printToUart(yString);
+    putCharUart('\r');
 }
