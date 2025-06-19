@@ -155,18 +155,6 @@ void drawBall(Ball ball, char color) {
 }
 
 void updateBall(Ball* ball, Wall lWall, Wall rWall) {
-    // Check ball collisions
-    checkCollision(ball, lWall, rWall);
-
-    // Update the ball's position
-    ball->x += ball->vx;
-    ball->y += ball->vy;
-
-    // Check if the ball is out of bounds
-    //checkOutOfBounds(ball);
-}
-
-void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
     int x = ball->x;
     int y = ball->y;
     int vy = ball->vy;
@@ -232,6 +220,7 @@ void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
         setPixel(xRight, i, GREEN, 0);  // ball Right
     }
 }
+
 
 void respawnBall(Ball* ball, int vx, int vy) {
     ball->x = VGA_X_LIM/2;
