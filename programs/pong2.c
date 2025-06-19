@@ -103,7 +103,7 @@ int main() {
                 // Default case, do nothing
                 break;
         }
-        printBallInfo(ball);
+        //printBallInfo(ball);
         waitTimer();
     }
     return 0;
