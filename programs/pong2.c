@@ -26,10 +26,8 @@ struct pongWall {
 typedef struct pongWall Wall;
 
 
-void fsm(Ball* ball, Wall* wallLeft, Wall* wallRight, char btnU, char btnD, char btnL, char btnR);
 void drawBall(Ball ball, char color);
 void updateBall(Ball* ball, Wall lWall, Wall rWall);
-void checkCollision(Ball* ball, Wall lWall, Wall rWall);
 void respawnBall(Ball* ball, int vx, int vy);
 void checkOutOfBounds(Ball* ball);
 void drawWall(Wall wall, char color);
@@ -93,7 +91,6 @@ int main() {
                 drawWall(wallRight, BLACK);
 
                 moveBall(&ball, btnU, btnD, btnL, btnR);
-                checkCollision(&ball, wallLeft, wallRight);
                 checkOutOfBounds(&ball);
 
                 drawBall(ball, WHITE);
