@@ -146,10 +146,7 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     */
 
     // Top/bottom screen bounce
-    if (yTop <= 0 && vy < 0) {
-        vy *= -1;
-    }
-    else if (yBot >= VGA_Y_LIM && vy > 0) {
+    if ((yTop <= 0 && vy < 0) || (yBot >= VGA_Y_LIM && vy > 0)) {
         vy *= -1;
     }
 
