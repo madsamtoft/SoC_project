@@ -170,8 +170,8 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
         return;
     }
 
-    ball->x = x;
-    ball->y = y;
+    ball->x = x + vx;
+    ball->y = y + vy;
     ball->vy = vy;
     ball->vx = vx;
 
