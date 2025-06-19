@@ -10,7 +10,7 @@
 #define WALL_SPEED 4
 
 #define SCREEN_OFFSET 5 // Offset for the right wall to fit on the screen
-#define FPS 30
+#define FPS 60
 
 //#define DEBUG 0 //uncomment for debug mode
 
@@ -262,6 +262,9 @@ void updateWallKeyboard(Wall* wall, char key) {
     int y = wall->y;
     int yTop = y;
     int yBot = y + WALL_HEIGHT;
+    if (key && 0xFF == W) {
+
+    }
 
     /* keyboard
     if (yBot < VGA_Y_LIM - WALL_MARGIN && yTop > WALL_MARGIN) {
