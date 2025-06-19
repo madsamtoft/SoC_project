@@ -36,7 +36,7 @@ int xOutOfBounds(Ball* ball);
 int yOutOfBounds(Ball* ball);
 int touchPaddle(Ball ball, Wall lWall, Wall rWall);
 
-//void printKeyboardInfo(char key);
+void printKeyboardInfo(char key);
 void printBallInfo(Ball ball);
 
 int main() {
@@ -75,7 +75,7 @@ int main() {
 
         // Print keyboard press to UART
         //printKeyboardInfo(key);
-        printBallInfo(ball);
+        //printBallInfo(ball);
 
         // Draw Updated Positions
         drawBall(ball, WHITE);
@@ -217,7 +217,6 @@ void printBallInfo(Ball ball) {
     putCharUart('\r');
 }
 
-/*
 void printKeyboardInfo(char key) {
     char outString[2] = "";
 
@@ -254,5 +253,3 @@ void printKeyboardInfo(char key) {
     outString[1] = '\r';
     printToUart(outString);
 }
-
-*/
