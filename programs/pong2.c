@@ -99,10 +99,8 @@ int main() {
                 // Default case, do nothing
                 break;
         }
-        
         waitTimer();
     }
-
     return 0;
 }
 
@@ -201,11 +199,17 @@ void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
 
     // Left or right screen edge bounce
     if (xRight >= VGA_X_LIM - 4) { // -4 only for my shitty screen
-        respawnBall(ball, -1*BALL_SPEED, vy);
+        ball->x = VGA_X_LIM/2;
+        ball->y = VGA_Y_LIM/2;
+        ball->vx = -1*BALL_SPEED;
+        ball->vy = vy;
         return;
     }
     else if (xLeft <= 2) { // 2 set for debugging purposes
-        respawnBall(ball, BALL_SPEED, vy);
+        ball->x = VGA_X_LIM/2;
+        ball->y = VGA_Y_LIM/2;
+        ball->vx = 1*BALL_SPEED;
+        ball->vy = vy;
         return;
     }
 
