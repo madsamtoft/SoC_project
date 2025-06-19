@@ -12,8 +12,6 @@
 #define SCREEN_OFFSET 5 // Offset for the right wall to fit on the screen
 #define FPS 60
 
-//#define DEBUG 0 //uncomment for debug mode
-
 struct pongBall {
     int x;
     int y;
@@ -28,23 +26,17 @@ struct pongWall {
 };
 typedef struct pongWall Wall;
 
-
 void drawBall(Ball ball, char color);
 void updateBall(Ball* ball, Wall lWall, Wall rWall);
-void moveBall(Ball* ball, char u, char d, char l, char r);
-void respawnBall(Ball* ball, int vx, int vy);
 
 void drawWall(Wall wall, char color);
-void updateWallButtons(Wall* wall, char u, char d);
-void updateWallKeyboard(Wall* lWall, Wall* rWall, char key);
+void updateWalls(Wall* lWall, Wall* rWall, char key);
 
 int xOutOfBounds(Ball* ball);
 int yOutOfBounds(Ball* ball);
 int touchPaddle(Ball ball, Wall lWall, Wall rWall);
 
-void printBallInfo(Ball ball);
 void printKeyboardInfo(char key);
-
 
 int main() {
     int wallRightYPos = VGA_X_LIM - WALL_WIDTH - WALL_MARGIN - SCREEN_OFFSET + 1;
@@ -65,89 +57,28 @@ int main() {
     // Initialize the screen as black
     drawScreen(BLACK);
 
-    
-    #ifdef DEBUG //DEBUGGING
-    for(int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(0, i, RED, 0); // wall Left
-        setPixel(VGA_X_LIM - SCREEN_OFFSET, i, GREEN, 0); // wall Right
-    }
-    #endif
-
     while(1) {
         startTimer(1000/FPS);
         
-        //Read switches for choosing modes
-        sw = readSwitches();
+        // Read Keyboard Input
+        key = readPs2() & 0xFF;
         
-        switch(readSwitches() & 0b11) {
-            case 0b00: // Move paddles with buttons
-                // Read Button Input
-                btns = readButtons();
-                btnU = (btns >> 0) & 0b1;
-                btnD = (btns >> 2) & 0b1;
-                btnL = (btns >> 3) & 0b1;
-                btnR = (btns >> 1) & 0b1;
-                
-                // Overwrite last frame
-                drawBall(ball, BLACK);
-                drawWall(wallLeft, BLACK);
-                drawWall(wallRight, BLACK);
+        // Overwrite last frame
+        drawBall(ball, BLACK);
+        drawWall(wallLeft, BLACK);
+        drawWall(wallRight, BLACK);
 
-                // Update Sprites
-                updateWallButtons(&wallLeft, btnU, btnL);
-                updateWallButtons(&wallRight, btnR, btnD);
-                updateBall(&ball, wallLeft, wallRight);
+        // Update Sprites
+        updateWalls(&wallLeft, &wallRight, key);
+        updateBall(&ball, wallLeft, wallRight);
 
-                // Draw Updated Positions
-                drawBall(ball, WHITE);
-                drawWall(wallLeft, WHITE);
-                drawWall(wallRight, WHITE);
-                break;
+        // Print keyboard press to UART
+        printKeyboardInfo(key);
 
-            case 0b01: // Move ball with buttons
-                // Overwrite last frame
-                drawBall(ball, BLACK);
-                drawWall(wallLeft, BLACK);
-                drawWall(wallRight, BLACK);
-
-                // Update Ball
-                moveBall(&ball, btnU, btnD, btnL, btnR);
-
-                // Print coordinates of the ball
-                printBallInfo(ball);
-                
-                // Draw Updated Positions
-                drawBall(ball, WHITE);
-                drawWall(wallLeft, WHITE);
-                drawWall(wallRight, WHITE);
-                break;
-
-            case 0b10: // Move paddles with keyboard
-                // Read Keyboard Input
-                key = readPs2();
-                
-                // Overwrite last frame
-                drawBall(ball, BLACK);
-                drawWall(wallLeft, BLACK);
-                drawWall(wallRight, BLACK);
-
-                // Update Sprites
-                updateWallKeyboard(&wallLeft, &wallRight, key);
-                updateBall(&ball, wallLeft, wallRight);
-
-                // Print keyboard press to UART
-                printKeyboardInfo(key);
-
-                // Draw Updated Positions
-                drawBall(ball, WHITE);
-                drawWall(wallLeft, WHITE);
-                drawWall(wallRight, WHITE);
-                break;
-
-            default:
-                // Default case, do nothing
-                break;
-        }
+        // Draw Updated Positions
+        drawBall(ball, WHITE);
+        drawWall(wallLeft, WHITE);
+        drawWall(wallRight, WHITE);
         
         waitTimer();
     }
@@ -188,60 +119,6 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     ball->y = y + vy;
     ball->vy = vy;
     ball->vx = vx;
-
-    
-    #ifdef DEBUG //DEBUGGING
-    for (int i = 0; i < VGA_Y_LIM; i++) {
-        setPixel(lWall.x+WALL_WIDTH, i, RED, 0); // wall Right
-
-        setPixel(x, i, BLUE, 0);        // ball Left
-        setPixel(x+BALL_SIZE, i, GREEN, 0);  // ball Right
-    }
-    #endif
-}
-
-void moveBall(Ball* ball, char u, char d, char l, char r) {
-    int x = ball->x;
-    int y = ball->y;
-    int vx = ball->vx;
-    int vy = ball->vy;
-
-    if(r && !l) {
-        vx = 1;
-    } else if (!r && l) {
-        vx = -1;
-    } else {
-        vx = 0;
-    }
-
-    if(d && !u) {
-        vy = 1;
-    } else if (!d && u) {
-        vy = -1;
-    } else {
-        vy = 0;
-    }
-
-    if (yOutOfBounds(ball)) {
-        vy *= 0;
-    }
-
-    if (xOutOfBounds(ball)) {
-        respawnBall(ball, vx, vy);
-        return; // Do not update position if out of bounds
-    }
-
-    ball->x = x + vx;
-    ball->y = y + vy;
-    ball->vx = vx;
-    ball->vy = vy;
-}
-
-void respawnBall(Ball* ball, int vx, int vy) {
-    ball->x = VGA_X_LIM/2;
-    ball->y = VGA_Y_LIM/2;
-    ball->vx = vx;
-    ball->vy = vy;
 }
 
 void drawWall(Wall wall, char color) {
@@ -251,22 +128,7 @@ void drawWall(Wall wall, char color) {
     drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, color, 0);
 }
 
-void updateWallButtons(Wall* wall, char u, char d) {
-    int y = wall->y;
-    int yTop = y;
-    int yBot = y + WALL_HEIGHT;
-    
-    //* buttons
-    if(d && !u && yBot < VGA_Y_LIM - WALL_MARGIN) {
-        y += WALL_SPEED;
-    } else if (!d && u && yTop > 0 + WALL_MARGIN) {
-        y -= WALL_SPEED;
-    }
-
-    wall->y = y;
-}
-
-void updateWallKeyboard(Wall* lWall, Wall* rWall, char key) {
+void updateWalls(Wall* lWall, Wall* rWall, char key) {
     int lWall_y = lWall->y;
     int lWall_yBot = lWall_y + WALL_HEIGHT;
 
@@ -286,6 +148,9 @@ void updateWallKeyboard(Wall* lWall, Wall* rWall, char key) {
     } else if ((rWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key && 0xFF) == K)) {
         rWall_y += WALL_SPEED;
     }
+
+    lWall->y = lWall_y;
+    rWall->y = rWall_y;
 }
 
 int xOutOfBounds(Ball* ball) {
@@ -335,21 +200,6 @@ int touchPaddle(Ball ball, Wall lWall, Wall rWall) {
     return 0; // Not touching any paddle
 }
 
-void printBallInfo(Ball ball) {
-    int x = ball.x;
-    char xString[5] = "";
-    numToString(x, xString);
-    
-    int y = ball.y;
-    char yString[5] = "";
-    numToString(y, yString);
-
-    printToUart(xString);
-    putCharUart(',');
-    printToUart(yString);
-    putCharUart('\r');
-}
-
 void printKeyboardInfo(char key) {
     char outString[2] = "";
 
@@ -386,3 +236,20 @@ void printKeyboardInfo(char key) {
     outString[1] = '\r';
     printToUart(outString);
 }
+
+/*
+void printBallInfo(Ball ball) {
+    int x = ball.x;
+    char xString[5] = "";
+    numToString(x, xString);
+    
+    int y = ball.y;
+    char yString[5] = "";
+    numToString(y, yString);
+
+    printToUart(xString);
+    putCharUart(',');
+    printToUart(yString);
+    putCharUart('\r');
+}
+*/

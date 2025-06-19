@@ -8,6 +8,8 @@ pong-win:
 	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 programs/pong.c -o out/programs/pong.out -O2 -nostartfiles -nodefaultlibs -nostdlib -L. -lgcc
 pong2-win:
 	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 programs/pong2.c -o out/programs/pong2.out -O2 -nostartfiles -nodefaultlibs -nostdlib -L. -lgcc
+pongKey-win:
+	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 programs/pongKey.c -o out/programs/pongKey.out -O2 -nostartfiles -nodefaultlibs -nostdlib -L. -lgcc
 pong2-mac:
 	riscv32-unknown-elf-gcc programs/pong2.c -o out/programs/pong2.out -O2 -nostartfiles -nodefaultlibs -nostdlib -L. -lgcc
 pong:
