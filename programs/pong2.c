@@ -9,7 +9,7 @@
 #define WALL_MARGIN 2
 #define WALL_SPEED 4
 
-#define SCREEN_OFFSET 8 // Offset for the right wall to fit on the screen
+#define SCREEN_OFFSET 5 // Offset for the right wall to fit on the screen
 
 struct pongBall {
     int x;
@@ -55,7 +55,7 @@ int main() {
     //DEBUG
     for(int i = 0; i < VGA_Y_LIM; i++) {
         setPixel(0, i, RED, 0); // wall Left
-        setPixel(VGA_X_LIM-4, i, GREEN, 0); // wall Right
+        setPixel(VGA_X_LIM-5, i, GREEN, 0); // wall Right
     }
 
     while(1) {
