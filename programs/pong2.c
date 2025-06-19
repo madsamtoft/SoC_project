@@ -268,11 +268,11 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
 
 void printBallInfo(Ball ball) {
     int x = ball.x;
-    char xString[] = "xxx";
+    char xString[5] = {0};
     numToString(x, xString);
     
     int y = ball.y;
-    char yString[] = "xxx";
+    char yString[5] = {0};
     numToString(y, yString);
 
     printToUart(xString);
