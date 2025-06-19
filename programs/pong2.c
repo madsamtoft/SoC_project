@@ -28,6 +28,7 @@ void fsm(Ball* ball, Wall* wallLeft, Wall* wallRight, char btnU, char btnD, char
 void drawBall(Ball ball, char color);
 void updateBall(Ball* ball, Wall lWall, Wall rWall);
 void checkCollision(Ball* ball, Wall lWall, Wall rWall);
+void respawnBall(Ball* ball, int vx, int vy);
 void checkOutOfBounds(Ball* ball);
 void drawWall(Wall wall, char color);
 void updateWall(Wall* wall, char u, char d);
@@ -65,7 +66,39 @@ int main() {
 
         //int key = readPs2();
 
-        fsm(&ball, &wallLeft, &wallRight, btnU, btnD, btnL, btnR);
+        switch(readSwitches() & 0b11) {
+            case 0b00:
+                // Move paddles with buttons
+                drawBall(ball, BLACK);
+                drawWall(wallLeft, BLACK);
+                drawWall(wallRight, BLACK);
+
+                updateWall(&wallLeft, btnU, btnL);
+                updateWall(&wallRight, btnR, btnD);
+                updateBall(&ball, wallLeft, wallRight);
+
+                drawBall(ball, WHITE);
+                drawWall(wallLeft, WHITE);
+                drawWall(wallRight, WHITE);
+                break;
+            case 0b01:
+                // Move ball with buttons
+                drawBall(ball, BLACK);
+                drawWall(wallLeft, BLACK);
+                drawWall(wallRight, BLACK);
+
+                moveBall(&ball, btnU, btnD, btnL, btnR);
+                checkCollision(&ball, wallLeft, wallRight);
+                checkOutOfBounds(&ball);
+
+                drawBall(ball, WHITE);
+                drawWall(wallLeft, WHITE);
+                drawWall(wallRight, WHITE);
+                break;
+            default:
+                // Default case, do nothing
+                break;
+        }
         
         waitTimer();
     }
@@ -81,9 +114,9 @@ void fsm(Ball* ball, Wall* wallLeft, Wall* wallRight, char btnU, char btnD, char
             drawWall(*wallLeft, BLACK);
             drawWall(*wallRight, BLACK);
 
-            updateWall(&wallLeft, btnU, btnL);
-            updateWall(&wallRight, btnR, btnD);
-            updateBall(&ball, *wallLeft, *wallRight);
+            updateWall(wallLeft, btnU, btnL);
+            updateWall(wallRight, btnR, btnD);
+            updateBall(ball, *wallLeft, *wallRight);
 
             drawBall(*ball, WHITE);
             drawWall(*wallLeft, WHITE);
@@ -95,9 +128,9 @@ void fsm(Ball* ball, Wall* wallLeft, Wall* wallRight, char btnU, char btnD, char
             drawWall(*wallLeft, BLACK);
             drawWall(*wallRight, BLACK);
 
-            moveBall(&ball, btnU, btnD, btnL, btnR);
-            checkCollision(&ball, *wallLeft, *wallRight);
-            checkOutOfBounds(&ball);
+            moveBall(ball, btnU, btnD, btnL, btnR);
+            checkCollision(ball, *wallLeft, *wallRight);
+            checkOutOfBounds(ball);
 
             drawBall(*ball, WHITE);
             drawWall(*wallLeft, WHITE);
@@ -121,27 +154,19 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     // Check ball collisions
     checkCollision(ball, lWall, rWall);
 
-    // Get the current position and velocity of the ball
-    int x = ball->x;
-    int y = ball->y;
-    int vx = ball->vx;
-    int vy = ball->vy;
-
     // Update the ball's position
-    ball->x = x + vx;
-    ball->y = y + vy;
-    ball->vx = vx;
-    ball->vy = vy;
+    ball->x += ball->vx;
+    ball->y += ball->vy;
 
     // Check if the ball is out of bounds
-    checkOutOfBounds(ball);
+    //checkOutOfBounds(ball);
 }
 
 void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
     int x = ball->x;
     int y = ball->y;
-    int vx = ball->vx;
     int vy = ball->vy;
+    int vx = ball->vx;
 
     int xLeft = x;
     int xRight = x + BALL_SIZE;
@@ -157,26 +182,14 @@ void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
     int rWall_yBot = rWall.y + WALL_HEIGHT;
 
     // Paddle collision — must come before wall collision
+    /*
     if(x <= lWall_xRight && y <= lWall_yBot && y >= lWall_yTop && vx < 0) {
         vx *= -1;
     }
     else if(xRight >= rWall_xLeft && y <= rWall_yBot && y >= rWall_yTop && vx > 0) {
         vx *= -1;
     }
-    
-
-    // Left or right screen edge bounce
-    if (xRight >= VGA_X_LIM - 4 && vx > 0) { // -4 only for my shitty screen
-        x = VGA_X_LIM/2;
-        y = VGA_Y_LIM/2;
-        vx = -1; // TEMP
-    }
-    else if (xLeft <= 2 && vx < 0) { // 2 set for debugging purposes
-        x = VGA_X_LIM/2;
-        y = VGA_Y_LIM/2;
-        vx = 1; // TEMP
-    }
-
+    */
 
     // Top/bottom screen bounce
     if (yTop <= 0 && vy < 0) {
@@ -185,6 +198,19 @@ void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
     else if (yBot >= VGA_Y_LIM && vy > 0) {
         vy *= -1;
     }
+
+    // Left or right screen edge bounce
+    if (xRight >= VGA_X_LIM - 4) { // -4 only for my shitty screen
+        respawnBall(ball, -1*BALL_SPEED, vy);
+        return;
+    }
+    else if (xLeft <= 2) { // 2 set for debugging purposes
+        respawnBall(ball, BALL_SPEED, vy);
+        return;
+    }
+
+    ball->vy = vy;
+    ball->vx = vx;
 
     //DEBUGGING
     for (int i = 0; i < VGA_Y_LIM; i++) {
@@ -195,12 +221,20 @@ void checkCollision(Ball* ball, Wall lWall, Wall rWall) {
     }
 }
 
+void respawnBall(Ball* ball, int vx, int vy) {
+    ball->x = VGA_X_LIM/2;
+    ball->y = VGA_Y_LIM/2;
+    ball->vx = vx;
+    ball->vy = vy;
+}
+
+
 void checkOutOfBounds(Ball* ball) {
     int x = ball->x;
     int y = ball->y;
 
     // Check if the ball is out of bounds
-    if (x < 0 || x >= VGA_X_LIM || y < 0 || y >= VGA_Y_LIM) {
+    if (x < -BALL_SIZE || x >= VGA_X_LIM+BALL_SIZE || y < 0-BALL_SIZE || y >= VGA_Y_LIM+BALL_SIZE) {
         x = VGA_X_LIM/2;
         y = VGA_Y_LIM/2;
         ball->x = x;
@@ -266,6 +300,10 @@ void moveBall(Ball* ball, char u, char d, char l, char r) {
         vy = -1;
     } else {
         vy = 0;
+    }
+
+    if ((y <= 0 && vy < 0) || (y+BALL_SIZE >= VGA_Y_LIM && vy > 0)) {
+        vy *= 0;
     }
 
     ball->x = x + vx;
