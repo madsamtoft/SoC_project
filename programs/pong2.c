@@ -59,7 +59,7 @@ int main() {
     }
 
     while(1) {
-        startTimer(1000/15);
+        startTimer(1000/30); // 30 FPS
         btns = readButtons();
         btnU = (btns >> 0) & 0b1;
         btnD = (btns >> 2) & 0b1;
