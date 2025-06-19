@@ -181,26 +181,30 @@ int yOutOfBounds(Ball* ball) {
 }
 
 int touchPaddle(Ball ball, Wall lWall, Wall rWall) {
-    int x = ball.x;
-    int xRight = x + BALL_SIZE;
-    int y = ball.y;
-    int yTop = y;
-    int yBot = y + BALL_SIZE;
+    int xLeft = ball.x;
+    int xRight = ball.x + BALL_SIZE;
+    int yTop = ball.y;;
+    int yBot = ball.y; + BALL_SIZE;
+
+    int vx = ball.vx;
 
     // Left paddle coordinates
     int lWall_xRight = lWall.x + WALL_WIDTH;
+    int lWall_xLeft = lWall.x;
     int lWall_yTop = lWall.y;
     int lWall_yBot = lWall.y + WALL_HEIGHT;
 
     // Right paddle coordinates
+    int rWall_xRight = lWall.x + WALL_WIDTH;
     int rWall_xLeft = rWall.x;
     int rWall_yTop = rWall.y;
     int rWall_yBot = rWall.y + WALL_HEIGHT;
 
     // Check if the ball is touching any paddle
-    if (x <= lWall_xRight && yBot >= lWall_yTop && yTop <= lWall_yBot) {
+    if ((xLeft <= lWall_xRight && xRight >= lWall_xLeft) && yBot >= lWall_yTop && yTop <= lWall_yBot && vx < 0) {
         return 1; // Touching left paddle
-    } else if (xRight >= rWall_xLeft && yBot >= rWall_yTop && yTop <= rWall_yBot) {
+    } 
+    if ((xRight >= rWall_xLeft && xLeft <= rWall_xRight) && yBot >= rWall_yTop && yTop <= rWall_yBot && vx > 0) {
         return 1; // Touching right paddle
     }
     return 0; // Not touching any paddle
