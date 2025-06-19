@@ -37,9 +37,11 @@ void printBallInfo(Ball ball);
 
 
 int main() {
+    int wallRightYPos = VGA_X_LIM - WALL_WIDTH - WALL_MARGIN - SCREEN_OFFSET;
+
     Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
-    Wall wallRight = {(VGA_X_LIM - WALL_WIDTH) - WALL_MARGIN - SCREEN_OFFSET, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
+    Wall wallRight = {wallRightYPos, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
 
     volatile char btns = 0;
     char btnU = 0;
@@ -55,7 +57,7 @@ int main() {
     //DEBUG
     for(int i = 0; i < VGA_Y_LIM; i++) {
         setPixel(0, i, RED, 0); // wall Left
-        setPixel(VGA_X_LIM-5, i, GREEN, 0); // wall Right
+        setPixel(VGA_X_LIM - SCREEN_OFFSET, i, GREEN, 0); // wall Right
     }
 
     while(1) {
