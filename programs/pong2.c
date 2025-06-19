@@ -219,16 +219,17 @@ int touchPaddle(Ball ball, Wall lWall, Wall rWall) {
     int lWall_yBot = lWall.y + WALL_HEIGHT;
 
     // Right paddle coordinates
-    int rWall_xRight = lWall.x + WALL_WIDTH;
+    int rWall_xRight = rWall.x + WALL_WIDTH;
     int rWall_xLeft = rWall.x;
     int rWall_yTop = rWall.y;
     int rWall_yBot = rWall.y + WALL_HEIGHT;
 
     // Check if the ball is touching any paddle
-    if ((xLeft <= lWall_xRight && xRight >= lWall_xLeft) && yBot >= lWall_yTop && yTop <= lWall_yBot && vx < 0) {
+    if (
+        (xLeft <= lWall_xRight && xRight >= lWall_xLeft) && yBot >= lWall_yTop && yTop <= lWall_yBot && vx < 0) {
         return 1; // Touching left paddle
-    } 
-    if ((xRight >= rWall_xLeft && xLeft <= rWall_xRight) && yBot >= rWall_yTop && yTop <= rWall_yBot && vx > 0) {
+    } else if (
+        (xRight >= rWall_xLeft && xLeft <= rWall_xRight) && yBot >= rWall_yTop && yTop <= rWall_yBot && vx > 0) {
         return 1; // Touching right paddle
     }
     return 0; // Not touching any paddle
@@ -331,6 +332,6 @@ void printBallInfo(Ball ball) {
     putCharUart('\r');
 }
 
-void printKeyboardInfo(char key) {
-
+void printKeyboardInfo(volatile char key) {
+    putCharUart(key + '0');
 }
