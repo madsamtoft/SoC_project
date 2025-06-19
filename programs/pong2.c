@@ -58,7 +58,7 @@ int main() {
     setPixel(VGA_X_LIM-5, VGA_Y_LIM-5, GREEN, 0);
 
     while(1) {
-        startTimer(1000/30);
+        startTimer(1000/15);
         btns = readButtons();
         btnU = (btns >> 0) & 0b1;
         btnD = (btns >> 2) & 0b1;
