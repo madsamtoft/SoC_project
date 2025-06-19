@@ -45,7 +45,7 @@ volatile int * const timer_target = (int *)TIMER_TARGET_ADDR;
 volatile int * const timer_done = (int *)TIMER_DONE_ADDR;
 
 volatile int * const uart_status = (int *)UART_STATUS;
-volatile char * const uart_data = (char *)UART_DATA;
+volatile int * const uart_data = (int *)UART_DATA;
 
 static int led_state;
 static int switch_state;
@@ -135,30 +135,56 @@ int readPs2(void) {
     return ps2_state;
 }
 
-void putCharUart(unsigned char value) {
+void putCharUart(int value) {
     // Wait for the UART tx bit to show that transmitting is ready,
     // and then put the data onto it
     //
     // value - the 8 bit character to put
     unsigned char tx_ready;
     do {
-        tx_ready = *uart_status & 0b1;
+        tx_ready = *uart_status & 0b01;
     } while (!tx_ready);
     *uart_data = value;
 }
 
-unsigned char getCharUart() {
+int getCharUart() {
     // Wait for the UART rx bit to show that recieving is ready,
     // and then return the data
     unsigned char rx_ready;
     do {
-        rx_ready = (*uart_status >> 1) & 0b1;
+        rx_ready = *uart_status & 0b10;
     } while (!rx_ready);
     return *uart_data;
 }
 
-void printToUart(unsigned char string[]) {
+char digitToChar(unsigned char digit) {
+    if (digit > 9) {
+        return 'x';
+    }
+    return '0' + digit;
+}
+
+void numToString(unsigned int num, char* string) {
+    // Convert any number in the range 0-999 to a string
+    //
+    // num - The number to convert
+    // string - pointer to the string's base address
+    string[0] = digitToChar((num/100) % 10);    // Hundreds
+    string[1] = digitToChar((num/10) % 10);     // Tens
+    string[2] = digitToChar(num % 10);          // Ones
+    string[3] = '\0';
+}
+
+void putCharOnceUart(int value) {
+    // Put the given value on the UART output,
+    // and then set it to 0 as soon as possible
+    putCharUart(value);
+    putCharUart(0);
+}
+
+void printToUart(char string[]) {
     // Print the given string to the UART output
+    // WARNING: Strings are problematic with the current memory loading technique
     //
     // string - the char array to be printed
     for(int i = 0; string[i] != '\0'; i++) {
