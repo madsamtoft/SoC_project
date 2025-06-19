@@ -57,6 +57,7 @@ int main() {
     char btnL = 0;
     char btnR = 0;
     volatile char sw = 0;
+    volatile char key = '0';
 
 
     // Initialize the screen as black
@@ -79,7 +80,7 @@ int main() {
         btnR = (btns >> 1) & 0b1;
         sw = readSwitches();
 
-        int key = readPs2();
+        key = readPs2();
 
         switch(readSwitches() & 0b11) {
             case 0b00:
@@ -126,8 +127,8 @@ int main() {
                 break;
         }
 
-        //printBallInfo(ball);
-        printKeyboardInfo(key);
+        printBallInfo(ball);
+        //printKeyboardInfo(key);
         waitTimer();
     }
     return 0;
@@ -332,6 +333,6 @@ void printBallInfo(Ball ball) {
     putCharUart('\r');
 }
 
-void printKeyboardInfo(volatile char key) {
-    putCharUart(key + '0');
+void printKeyboardInfo(char key) {
+    putCharUart(key);
 }

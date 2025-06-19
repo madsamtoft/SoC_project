@@ -12,6 +12,7 @@ make $1 file=switches_simple
 make $1 file=timer
 
 make $1 file=uart_usb_simple 
+make $1 file=hid_test
 
 make $1 file=vga_simple
 make $1 file=vga_simple2
