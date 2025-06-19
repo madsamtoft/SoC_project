@@ -171,7 +171,7 @@ char digitToChar(unsigned char digit) {
     return '0' + digit;
 }
 
-void numToString(unsigned int num, char* string) {
+void numToString(int num, char* string) {
     // Convert any number in the range 0-999 to a string
     //
     // num - The number to convert
@@ -179,9 +179,13 @@ void numToString(unsigned int num, char* string) {
     // int i = num < 0;
     // string[0] = '-';
     if (num > 999) {
-        string[0] = 'X';
-        string[1] = 'X';
-        string[2] = 'X';
+        string[0] = '+';
+        string[1] = '+';
+        string[2] = '+';
+    } else if (num < 0) {
+        string[0] = '-';
+        string[1] = '-';
+        string[2] = '-';
     } else {
         string[0] = digitToChar((num/100) % 10);    // Hundreds
         string[1] = digitToChar((num/10) % 10);     // Tens

@@ -27,12 +27,12 @@ struct pongWall {
 typedef struct pongWall Wall;
 
 
-void drawBall(Ball* ball, char color);
+void drawBall(Ball ball, char color);
 void updateBall(Ball* ball);
-void drawWall(Wall* wall, char color);
+void drawWall(Wall wall, char color);
 void updateWall(Wall* wall, char u, char d);
 void moveBall(Ball* ball, char u, char d, char l, char r);
-void printBallInfo(Ball* ball);
+void printBallInfo(Ball ball);
 
 
 int main() {
@@ -53,7 +53,7 @@ int main() {
         startTimer(1000/FPS);
     
         // clearLine(20);
-        // printBallInfo(&ball);
+        printBallInfo(ball);
         
         btns = readButtons();
         btnU = (btns >> 0) & 0b1;
@@ -63,9 +63,9 @@ int main() {
         sw = readSwitches();
 
         // Draw old positions black
-        drawBall(&ball, BLACK);
-        drawWall(&wallLeft, BLACK);
-        drawWall(&wallRight, BLACK);
+        drawBall(ball, BLACK);
+        drawWall(wallLeft, BLACK);
+        drawWall(wallRight, BLACK);
 
         // Update all the pieces
         updateBall(&ball);
@@ -73,9 +73,9 @@ int main() {
         updateWall(&wallRight, btnR, btnD);
         
         // Draw the pieces white
-        drawBall(&ball, WHITE);
-        drawWall(&wallLeft, WHITE);
-        drawWall(&wallRight, WHITE);
+        drawBall(ball, WHITE);
+        drawWall(wallLeft, WHITE);
+        drawWall(wallRight, WHITE);
 
         waitTimer();
     }
@@ -83,9 +83,9 @@ int main() {
     return 0;
 }
 
-void drawBall(Ball* ball, char color) {
-    int x = ball->x;
-    int y = ball->y;
+void drawBall(Ball ball, char color) {
+    int x = ball.x;
+    int y = ball.y;
 
     drawSquare(x, y, BALL_SIZE, color, 0);
 }
@@ -137,9 +137,9 @@ void updateBall(Ball* ball) {
     ball->vy = vy;
 }
 
-void drawWall(Wall* wall, char color) {
-    int x = wall->x;
-    int y = wall->y;
+void drawWall(Wall wall, char color) {
+    int x = wall.x;
+    int y = wall.y;
 
     drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, color, 0);
 }
@@ -158,12 +158,12 @@ void updateWall(Wall* wall, char u, char d) {
     wall->y = y;
 }
 
-void printBallInfo(Ball* ball) {
-    int x = ball->x;
+void printBallInfo(Ball ball) {
+    int x = ball.x;
     char xString[5] = "";
     numToString(x, xString);
     
-    int y = ball->y;
+    int y = ball.y;
     char yString[5] = "";
     numToString(y, yString);
 
