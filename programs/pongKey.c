@@ -8,7 +8,7 @@
 #define WALL_HEIGHT 60
 #define WALL_MARGIN 2
 #define WALL_SPEED 4
-#define WALL_AI_SPEED 2
+#define WALL_AI_SPEED 3
 
 #define SCREEN_OFFSET 5 // Offset for the right wall to fit on the screen
 #define FPS 30
