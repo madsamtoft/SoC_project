@@ -2,15 +2,16 @@
 #include "../lib/wildio.h"
 
 #define BALL_SIZE 6
-#define BALL_SPEED 1
+#define BALL_SPEED 4
 
 #define WALL_WIDTH 5
 #define WALL_HEIGHT 60
 #define WALL_MARGIN 2
 #define WALL_SPEED 4
+#define WALL_AI_SPEED 2
 
 #define SCREEN_OFFSET 5 // Offset for the right wall to fit on the screen
-#define FPS 60
+#define FPS 30
 
 struct pongBall {
     int x;
@@ -26,18 +27,29 @@ struct pongWall {
 };
 typedef struct pongWall Wall;
 
+struct score {
+    int left;
+    int right;
+};
+typedef struct score Score;
+
+
 void drawBall(Ball ball, char color);
-void updateBall(Ball* ball, Wall lWall, Wall rWall);
+void updateBall(Ball* ball, Wall lWall, Wall rWall, Score *score);
 
 void drawWall(Wall wall, char color);
-void updateWalls(Wall* lWall, Wall* rWall, char key);
+void updateWallLeft(Wall* lWall);
+void updateWallRight(Wall* rWall);
+void updateWallRightAI(Wall* rWall, Ball ball);
 
-int xOutOfBounds(Ball* ball);
+int xOutOfBoundsLeft(Ball* ball);
+int xOutOfBoundsRight(Ball* ball);
 int yOutOfBounds(Ball* ball);
 int touchPaddle(Ball ball, Wall lWall, Wall rWall);
 
 void printKeyboardInfo(char key);
 void printBallInfo(Ball ball);
+void printScoreInfo(Score score);
 
 int main() {
     int wallRightYPos = VGA_X_LIM - WALL_WIDTH - WALL_MARGIN - SCREEN_OFFSET + 1;
@@ -45,43 +57,44 @@ int main() {
     Ball ball = {VGA_X_LIM/2, VGA_Y_LIM/2, BALL_SPEED, BALL_SPEED};
     Wall wallLeft = {WALL_MARGIN, WALL_MARGIN};
     Wall wallRight = {wallRightYPos, WALL_MARGIN}; //{VGA_X_LIM - WALL_MARGIN, WALL_MARGIN};
+    Score score = {0, 0};
 
-    volatile char btns = 0;
-    char btnU = 0;
-    char btnD = 0;
-    char btnL = 0;
-    char btnR = 0;
-    volatile char sw = 0;
-    volatile char key = '0';
-
+    Ball lastBall = ball;
+    Wall lastWallLeft = wallLeft;
+    Wall lastWallRight = wallRight;
 
     // Initialize the screen as black
     drawScreen(BLACK);
 
     while(1) {
         startTimer(1000/FPS);
-        
-        // Read Keyboard Input
-        key = readPs2() & 0xFF;
-        
-        // Overwrite last frame
-        drawBall(ball, BLACK);
-        drawWall(wallLeft, BLACK);
-        drawWall(wallRight, BLACK);
 
         // Update Sprites
-        updateWalls(&wallLeft, &wallRight, key);
-        updateBall(&ball, wallLeft, wallRight);
+        updateWallLeft(&wallLeft);
+        //updateWallRight(&wallRight);
+        updateWallRightAI(&wallRight, ball);
+        updateBall(&ball, wallLeft, wallRight, &score);
 
         // Print keyboard press to UART
         //printKeyboardInfo(key);
         //printBallInfo(ball);
+        printScoreInfo(score);
 
-        // Draw Updated Positions
+        // Overwrite last frame and draw new frame
+        drawBall(lastBall, BLACK);
         drawBall(ball, WHITE);
+
+        drawWall(lastWallLeft, BLACK);
         drawWall(wallLeft, WHITE);
+
+        drawWall(lastWallRight, BLACK);
         drawWall(wallRight, WHITE);
-        
+
+        // Save last positions
+        lastBall = ball;
+        lastWallLeft = wallLeft;
+        lastWallRight = wallRight;
+
         waitTimer();
     }
     return 0;
@@ -94,7 +107,7 @@ void drawBall(Ball ball, char color) {
     drawSquare(x, y, BALL_SIZE, color, 0);
 }
 
-void updateBall(Ball* ball, Wall lWall, Wall rWall) {
+void updateBall(Ball* ball, Wall lWall, Wall rWall, Score *score) {
     int x = ball->x;
     int y = ball->y;
     int vy = ball->vy;
@@ -111,10 +124,22 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall) {
     }
 
     // Left or right screen edge bounce
-    if (xOutOfBounds(ball)) {
+    if (xOutOfBoundsLeft(ball)) {
+        // Reset ball position to center
         x = VGA_X_LIM/2;
         y = VGA_Y_LIM/2;
         vx *= -1;
+
+        // Increment right score
+        score->right += 1;
+    } else if (xOutOfBoundsRight(ball)) {
+        // Reset ball position to center
+        x = VGA_X_LIM/2;
+        y = VGA_Y_LIM/2;
+        vx *= -1;
+
+        // Increment left score
+        score->left += 1;
     }
 
     ball->x = x + vx;
@@ -130,12 +155,12 @@ void drawWall(Wall wall, char color) {
     drawRectangle(x, y, WALL_WIDTH, WALL_HEIGHT, color, 0);
 }
 
-void updateWalls(Wall* lWall, Wall* rWall, char key) {
+void updateWallLeft(Wall* lWall) {
+    volatile char key = '0';
+    key = readPs2() & 0xFF; // Read the key from PS2
+
     int lWall_y = lWall->y;
     int lWall_yBot = lWall_y + WALL_HEIGHT;
-
-    int rWall_y = rWall->y;
-    int rWall_yBot = rWall_y + WALL_HEIGHT;
     
     // Left Wall
     if ((lWall_y > 0 + WALL_MARGIN) && ((key & 0xFF) == W)) { 
@@ -143,6 +168,15 @@ void updateWalls(Wall* lWall, Wall* rWall, char key) {
     } else if ((lWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key & 0xFF) == S)) {
         lWall_y += WALL_SPEED;
     }
+    lWall->y = lWall_y;
+}
+
+void updateWallRight(Wall* rWall) {
+    volatile char key = '0';
+    key = readPs2() & 0xFF; // Read the key from PS2
+
+    int rWall_y = rWall->y;
+    int rWall_yBot = rWall_y + WALL_HEIGHT;
 
     // Right Wall
     if ((rWall_y > 0 + WALL_MARGIN) && ((key & 0xFF) == I)) { 
@@ -150,17 +184,40 @@ void updateWalls(Wall* lWall, Wall* rWall, char key) {
     } else if ((rWall_yBot < VGA_Y_LIM - WALL_MARGIN) && ((key & 0xFF) == K)) {
         rWall_y += WALL_SPEED;
     }
-
-    lWall->y = lWall_y;
     rWall->y = rWall_y;
 }
 
-int xOutOfBounds(Ball* ball) {
+void updateWallRightAI(Wall* rWall, Ball ball) {
+    int rWall_y = rWall->y;
+    int rWall_yBot = rWall_y + WALL_HEIGHT;
+
+    int ballCenterY = ball.y + BALL_SIZE / 2;
+    int paddleCenterY = rWall_y + WALL_HEIGHT / 2;
+
+    // Simple AI: move paddle up or down to follow the ball
+    if (paddleCenterY > ballCenterY && rWall_y > WALL_MARGIN) {
+        rWall_y -= WALL_AI_SPEED;
+    } else if (paddleCenterY < ballCenterY && rWall_yBot < VGA_Y_LIM - WALL_MARGIN) {
+        rWall_y += WALL_AI_SPEED;
+    }
+
+    rWall->y = rWall_y;
+}
+
+int xOutOfBoundsLeft(Ball* ball) {
     int x = ball->x;
     int y = ball->y;
 
     // Check if the ball is out of x-bounds
-    return (x < 0 || x >= VGA_X_LIM-BALL_SIZE-SCREEN_OFFSET) ? 1 : 0;
+    return (x < 0) ? 1 : 0;
+}
+
+int xOutOfBoundsRight(Ball* ball) {
+    int x = ball->x;
+    int y = ball->y;
+
+    // Check if the ball is out of x-bounds
+    return (x >= VGA_X_LIM-BALL_SIZE-SCREEN_OFFSET) ? 1 : 0;
 }
 
 int yOutOfBounds(Ball* ball) {
@@ -252,4 +309,21 @@ void printKeyboardInfo(char key) {
 
     outString[1] = '\r';
     printToUart(outString);
+}
+
+void printScoreInfo(Score score) {
+    int scoreLeft = score.left;
+    int scoreRight = score.right;
+
+    char leftScore[5] = "";
+    char rightScore[5] = "";
+    char scoreSep[3] = " : ";
+
+    numToString(scoreLeft, leftScore);
+    numToString(scoreRight, rightScore);
+
+    printToUart(leftScore);
+    printToUart(scoreSep);
+    printToUart(rightScore);
+    putCharUart('\r');
 }
