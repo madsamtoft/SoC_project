@@ -2,16 +2,16 @@
 #include "../lib/wildio.h"
 
 #define BALL_SIZE 6
-#define BALL_SPEED 4
+#define BALL_SPEED 2
 
 #define WALL_WIDTH 5
 #define WALL_HEIGHT 60
 #define WALL_MARGIN 2
-#define WALL_SPEED 4
-#define WALL_AI_SPEED 3
+#define WALL_SPEED 2
+#define WALL_AI_SPEED 2
 
 #define SCREEN_OFFSET 5 // Offset for the right wall to fit on the screen
-#define FPS 30
+#define FPS 60
 
 struct pongBall {
     int x;
@@ -114,8 +114,33 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall, Score *score) {
     int vx = ball->vx;
 
     // Paddle collision — must come before wall collision
+    /*
     if(touchPaddle(*ball, lWall, rWall)) {
         vx *= -1; // Reverse direction
+    }
+    */
+    
+    if(touchPaddle(*ball, lWall, rWall)) {
+        vx *= -1;
+
+        // Introduce variation in Y-velocity based on hit position and random noise
+        int paddleY;
+        if (vx > 0) {
+            paddleY = rWall.y + WALL_HEIGHT / 2;
+        } else {
+            paddleY = lWall.y + WALL_HEIGHT / 2;
+        }
+
+        int ballCenterY = ball->y + BALL_SIZE / 2;
+        int offset = ballCenterY - paddleY; // Positive if hit lower half, negative if upper
+
+        // Normalize offset to scale the deflection (adjust divisor for sensitivity)
+        vy = offset / (WALL_HEIGHT / 6); // gives range around -3 to +3
+
+        // Ensure vertical speed is never zero
+        if (vy == 0) {
+            vy = (rand() % 2 == 0) ? 1 : -1;
+        }
     }
 
     // Top/bottom screen bounce
