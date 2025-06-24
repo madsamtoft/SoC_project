@@ -120,26 +120,26 @@ void updateBall(Ball* ball, Wall lWall, Wall rWall, Score *score) {
     }
     */
     
-    if(touchPaddle(*ball, lWall, rWall)) {
+    if (touchPaddle(*ball, lWall, rWall)) {
         vx *= -1;
 
-        // Introduce variation in Y-velocity based on hit position and random noise
-        int paddleY;
-        if (vx > 0) {
-            paddleY = rWall.y + WALL_HEIGHT / 2;
-        } else {
-            paddleY = lWall.y + WALL_HEIGHT / 2;
-        }
-
+        // Compute offset between ball and paddle center
+        int paddleY = (vx > 0) ? (rWall.y + WALL_HEIGHT / 2) : (lWall.y + WALL_HEIGHT / 2);
         int ballCenterY = ball->y + BALL_SIZE / 2;
-        int offset = ballCenterY - paddleY; // Positive if hit lower half, negative if upper
+        int offset = ballCenterY - paddleY;
 
-        // Normalize offset to scale the deflection (adjust divisor for sensitivity)
-        vy = offset / (WALL_HEIGHT / 6); // gives range around -3 to +3
+        // Scale the offset to affect vy more or less
+        vy = offset / (WALL_HEIGHT / 6); // range: ~[-3, 3]
 
-        // Ensure vertical speed is never zero
+        // Create pseudo-random variation using current X and Y
+        // This helps break deterministic cycles
+        int variation = ((ball->x ^ ball->y) % 3) - 1; // gives -1, 0, or 1
+
+        vy += variation;
+
+        // Ensure vertical speed is not zero
         if (vy == 0) {
-            vy = (rand() % 2 == 0) ? 1 : -1;
+            vy = 1;
         }
     }
 
