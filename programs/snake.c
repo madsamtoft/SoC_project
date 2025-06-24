@@ -7,7 +7,7 @@
 #define FOOD_SIZE SNAKE_SIZE
 #define SPEED 8  // Lower is faster
 
-typedef enum { UP, DOWN, LEFT, RIGHT } Direction;
+typedef enum { W, S, A, D } Direction;
 
 typedef struct {
     int x, y;
@@ -15,7 +15,7 @@ typedef struct {
 
 Point snake[MAX_SNAKE_LENGTH];
 int snakeLength = INITIAL_LENGTH;
-Direction dir = RIGHT;
+Direction dir = D;
 
 Point food;
 
@@ -41,10 +41,10 @@ void moveSnake() {
     }
 
     // Move head
-    if (dir == UP) snake[0].y -= SNAKE_SIZE;
-    if (dir == DOWN) snake[0].y += SNAKE_SIZE;
-    if (dir == LEFT) snake[0].x -= SNAKE_SIZE;
-    if (dir == RIGHT) snake[0].x += SNAKE_SIZE;
+    if (dir == W) snake[0].y -= SNAKE_SIZE;
+    if (dir == S) snake[0].y += SNAKE_SIZE;
+    if (dir == A) snake[0].x -= SNAKE_SIZE;
+    if (dir == D) snake[0].x += SNAKE_SIZE;
 }
 
 int outOfBounds(Point p) {
@@ -62,10 +62,10 @@ void updateDirection() {
     char key = readPs2() & 0xFF;
 
     switch (key) {
-        case W: if (dir != DOWN) dir = UP; break;
-        case S: if (dir != UP) dir = DOWN; break;
-        case A: if (dir != RIGHT) dir = LEFT; break;
-        case D: if (dir != LEFT) dir = RIGHT; break;
+        case W: if (dir != S) dir = W; break;
+        case S: if (dir != W) dir = S; break;
+        case A: if (dir != D) dir = A; break;
+        case D: if (dir != A) dir = D; break;
     }
 }
 
