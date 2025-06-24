@@ -50,7 +50,7 @@ void setPixel(int x, int y, char c, char wrap) {
 
     unsigned int xOffset = x & 0x1ff;
     unsigned int yOffset = (y & 0xff) << 9;
-    volatile char * addrPtr = (char *) ((unsigned int)vga + (xOffset + yOffset)); // Only works because charsize is 1 byte
+    volatile char * addrPtr = (char *) ((unsigned int)vga + (xOffset + yOffset));
     *addrPtr = c;
 }
 
