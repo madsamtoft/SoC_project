@@ -17,6 +17,8 @@ pong2-mac:
 	riscv32-unknown-elf-gcc programs/pong2.c -o out/programs/pong2.out -O2 -nostartfiles
 pongKey-mac:
 	riscv32-unknown-elf-gcc programs/pongKey.c -o out/programs/pongKey.out -O2 -nostartfiles
+snake-mac:
+	riscv32-unknown-elf-gcc programs/snake.c -o out/programs/snake.out -O2 -nostartfiles
 
 clean:
 	rm out/*.out
