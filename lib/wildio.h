@@ -63,8 +63,8 @@ void wait(volatile int delay) {
 }
 
 // Hardware timer/wait function
-void startTimer(int time) {
-    *timer_target = time;
+void startTimer(int ms) {
+    *timer_target = ms;
 }
 
 void waitTimer() {
@@ -124,9 +124,9 @@ int readButtons(void) {
     return button_state;
 }
 
-int readButton(int button) {
+int readButton(int btn) {
     button_state = *buttons;
-    return button_state & button;
+    return button_state & btn;
 }
 
 // PS2/UART Functions
